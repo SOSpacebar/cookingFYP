@@ -71,9 +71,9 @@ Build/*/**
 Saved/*
 
 # Compiled source files for the engine to use
+Prototype 4.21/Intermediate/*
 Intermediate/*
 Plugins/*/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
-CachedAssetRegistry/*
