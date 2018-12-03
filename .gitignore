@@ -71,7 +71,7 @@ Build/*/**
 Saved/*
 
 # Compiled source files for the engine to use
-Prototype 4.21/Intermediate/*
+Prototype_4_21/Intermediate/*
 Intermediate/*
 Plugins/*/Intermediate/*
 
