@@ -20,6 +20,6 @@ public:
 protected:
 
 	// Mesh of the Object
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		UStaticMeshComponent *staticMesh;
 };
