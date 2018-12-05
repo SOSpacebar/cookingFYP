@@ -27,6 +27,19 @@ void AInteractableObject::Tick(float DeltaTime)
 
 }
 
+FString AInteractableObject::GetInteractMessage()
+{
+	return GetInteractableText();
+}
+
+void AInteractableObject::StartInteract()
+{
+}
+
+void AInteractableObject::EndInteract()
+{
+}
+
 FString AInteractableObject::GetInteractableText() const
 {
 	return FString::Printf(TEXT("%s : Interact to %s."), *name, *action);

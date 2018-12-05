@@ -4,13 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Environment.h"
+#include "Interactable.h"
 #include "InteractableObject.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROTOTYPE_4_21_API AInteractableObject : public AEnvironment
+class PROTOTYPE_4_21_API AInteractableObject : public AEnvironment, public IInteractable
 {
 	GENERATED_BODY()
 
@@ -29,13 +30,21 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FName objectID;
 
+
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// What happens when the object is interacted.
-	UFUNCTION(BlueprintImplementableEvent)
-	void Interact();
+	//// What happens when the object is interacted.
+	//UFUNCTION(BlueprintImplementableEvent)
+	//void Interact();
+
+	virtual FString GetInteractMessage() override;
+
+	virtual void StartInteract() override;
+
+	virtual void EndInteract() override;
+
 
 	UFUNCTION(BlueprintCallable, Category = "Info")
 	FString GetInteractableText() const;

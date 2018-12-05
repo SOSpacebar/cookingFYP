@@ -20,7 +20,6 @@ public:
 protected:
 
 	// Mesh of the Object
-	UPROPERTY(EditAnywhere)
-		UStaticMeshComponent *toolMesh;
-	
+	UPROPERTY(VisibleAnywhere)
+		UStaticMeshComponent *staticMesh;
 };
