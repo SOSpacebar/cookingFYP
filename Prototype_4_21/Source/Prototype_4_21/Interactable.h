@@ -22,15 +22,13 @@ class PROTOTYPE_4_21_API IInteractable
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	// Returns Message of the intractable object.
-	//UFUNCTION(BlueprintCallable, Category = "Info")
-		virtual FString GetInteractMessage() = 0;
 
-	// Starts execution for the interaction.
-	//UFUNCTION(BlueprintCallable, Category = "Interaction")
-		virtual void StartInteract() = 0;
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "JJInteraction/Interaction")
+		void Pickup(class USceneComponent* AttachTo);
 
-	// End execution of the interaction.
-	//UFUNCTION(BlueprintCallable, Category = "Interaction")
-		virtual void EndInteract() = 0;
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "JJInteraction/Interaction")
+		void Drop();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "JJInteraction/Interaction")
+		void Interact();
 };

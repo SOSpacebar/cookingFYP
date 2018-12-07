@@ -27,16 +27,16 @@ void AInteractableObject::Tick(float DeltaTime)
 
 }
 
-FString AInteractableObject::GetInteractMessage()
-{
-	return GetInteractableText();
-}
 
-void AInteractableObject::StartInteract()
+void AInteractableObject::Pickup_Implementation(USceneComponent * _attachTo)
 {
 }
 
-void AInteractableObject::EndInteract()
+void AInteractableObject::Drop_Implementation()
+{
+}
+
+void AInteractableObject::Interact_Implementation()
 {
 }
 

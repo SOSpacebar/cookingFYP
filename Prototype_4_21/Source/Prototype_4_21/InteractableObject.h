@@ -30,21 +30,20 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FName objectID;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool isPickedUp;
 
 public:
 	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	virtual void Tick(float _deltaTime) override;
 
 	//// What happens when the object is interacted.
 	//UFUNCTION(BlueprintImplementableEvent)
 	//void Interact();
 
-	virtual FString GetInteractMessage() override;
-
-	virtual void StartInteract() override;
-
-	virtual void EndInteract() override;
-
+	virtual void Pickup_Implementation(class USceneComponent* _attachTo);
+	virtual void Drop_Implementation();
+	virtual void Interact_Implementation();
 
 	UFUNCTION(BlueprintCallable, Category = "Info")
 	FString GetInteractableText() const;
