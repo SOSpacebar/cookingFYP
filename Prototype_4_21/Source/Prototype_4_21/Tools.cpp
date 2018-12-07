@@ -18,6 +18,12 @@ ATools::ATools()
 void ATools::BeginPlay()
 {
 	Super::BeginPlay();
+
+	RootComponent = staticMesh;
+	staticMesh->SetNotifyRigidBodyCollision(true);
+	staticMesh->SetGenerateOverlapEvents(true);
+	staticMesh->SetSimulatePhysics(true);
+	staticMesh->SetRelativeScale3D(FVector(0.2f, 0.2f, 0.2f));
 }
 
 void ATools::Pickup_Implementation(USceneComponent* _attachTo)
