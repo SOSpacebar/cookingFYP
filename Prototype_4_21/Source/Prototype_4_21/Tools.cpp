@@ -32,6 +32,7 @@ void ATools::PickupObject_Implementation(USceneComponent* _attachTo)
 
 	FAttachmentTransformRules AttachmentTransformRules(EAttachmentRule::KeepWorld, false);
 	GetRootComponent()->AttachToComponent(_attachTo, AttachmentTransformRules);
+	isPickedUp = true;
 }
 
 void ATools::DropObject_Implementation()
@@ -40,6 +41,7 @@ void ATools::DropObject_Implementation()
 
 	FDetachmentTransformRules DetatchmentTransformRules(EDetachmentRule::KeepWorld, true);
 	DetachFromActor(DetatchmentTransformRules);
+	isPickedUp = false;
 }
 
 void ATools::InteractObject_Implementation()
