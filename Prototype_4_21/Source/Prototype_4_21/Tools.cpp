@@ -26,7 +26,7 @@ void ATools::BeginPlay()
 	staticMesh->SetRelativeScale3D(FVector(0.2f, 0.2f, 0.2f));
 }
 
-void ATools::Pickup_Implementation(USceneComponent* _attachTo)
+void ATools::PickupObject_Implementation(USceneComponent* _attachTo)
 {
 	staticMesh->SetSimulatePhysics(false);
 
@@ -34,7 +34,7 @@ void ATools::Pickup_Implementation(USceneComponent* _attachTo)
 	GetRootComponent()->AttachToComponent(_attachTo, AttachmentTransformRules);
 }
 
-void ATools::Drop_Implementation()
+void ATools::DropObject_Implementation()
 {
 	staticMesh->SetSimulatePhysics(true);
 
@@ -42,7 +42,7 @@ void ATools::Drop_Implementation()
 	DetachFromActor(DetatchmentTransformRules);
 }
 
-void ATools::Interact_Implementation()
+void ATools::InteractObject_Implementation()
 {
 
 }

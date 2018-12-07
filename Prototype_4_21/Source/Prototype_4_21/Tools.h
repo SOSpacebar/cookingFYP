@@ -27,12 +27,12 @@ protected:
 		UStaticMeshComponent *staticMesh;
 
 	//UFUNCTION(BlueprintCallable, Category = "JJInteraction/Interaction")
-	virtual void Pickup_Implementation(class USceneComponent* _attachTo) override;
+	virtual void PickupObject_Implementation(class USceneComponent* _attachTo) override;
 
 	//UFUNCTION(BlueprintCallable, Category = "JJInteraction/Interaction")
-	virtual void Drop_Implementation() override;
+	virtual void DropObject_Implementation() override;
 
 	//UFUNCTION(BlueprintCallable, Category = "JJInteraction/Interaction")
-	virtual void Interact_Implementation() override;
+	virtual void InteractObject_Implementation() override;
 
 };

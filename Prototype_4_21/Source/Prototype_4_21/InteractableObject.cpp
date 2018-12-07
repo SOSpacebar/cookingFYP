@@ -28,15 +28,15 @@ void AInteractableObject::Tick(float DeltaTime)
 }
 
 
-void AInteractableObject::Pickup_Implementation(USceneComponent * _attachTo)
+void AInteractableObject::PickupObject_Implementation(USceneComponent * _attachTo)
 {
 }
 
-void AInteractableObject::Drop_Implementation()
+void AInteractableObject::DropObject_Implementation()
 {
 }
 
-void AInteractableObject::Interact_Implementation()
+void AInteractableObject::InteractObject_Implementation()
 {
 }
 

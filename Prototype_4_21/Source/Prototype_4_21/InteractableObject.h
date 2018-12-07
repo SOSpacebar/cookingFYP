@@ -41,9 +41,9 @@ public:
 	//UFUNCTION(BlueprintImplementableEvent)
 	//void Interact();
 
-	virtual void Pickup_Implementation(class USceneComponent* _attachTo);
-	virtual void Drop_Implementation();
-	virtual void Interact_Implementation();
+	virtual void PickupObject_Implementation(class USceneComponent* _attachTo);
+	virtual void DropObject_Implementation();
+	virtual void InteractObject_Implementation();
 
 	UFUNCTION(BlueprintCallable, Category = "Info")
 	FString GetInteractableText() const;

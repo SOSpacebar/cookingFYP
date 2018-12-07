@@ -24,11 +24,11 @@ class PROTOTYPE_4_21_API IInteractable
 public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "JJInteraction/Interaction")
-		void Pickup(class USceneComponent* AttachTo);
+		void PickupObject(class USceneComponent* AttachTo);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "JJInteraction/Interaction")
-		void Drop();
+		void DropObject();
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "JJInteraction/Interaction")
-		void Interact();
+		void InteractObject();
 };
