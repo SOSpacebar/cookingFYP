@@ -20,6 +20,11 @@ EBTNodeResult::Type UBT_SelectNewPoint::ExecuteTask(UBehaviorTreeComponent& _own
 
 		AAI_PathPoint* nextPoint = nullptr;
 
+		if (availablePathPoints.Num() == 0) // Return if no paths.
+		{
+			return EBTNodeResult::Aborted;
+		}
+
 		if (aiCon->currentPoint != availablePathPoints.Num() - 1)
 		{
 			nextPoint = Cast<AAI_PathPoint>(availablePathPoints[++aiCon->currentPoint]);

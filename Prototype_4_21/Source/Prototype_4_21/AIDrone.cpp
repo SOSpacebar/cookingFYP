@@ -17,6 +17,7 @@ AAIDrone::AAIDrone()
 
 	state = AI_DRONESTATES::IDLE;
 	target = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	health = 100.f;
 	PrimaryActorTick.bCanEverTick = true;
 }
 
@@ -33,6 +34,10 @@ void AAIDrone::BeginPlay()
 
 void AAIDrone::Tick(float _dt)
 {
+	if (!target)
+	{
+		target = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	}
 	if (target->GetPawn())
 	{
 		FVector direction = target->GetPawn()->GetActorLocation() - this->GetActorLocation();
@@ -54,9 +59,9 @@ void AAIDrone::TakeDamage_Implementation(float _dmg)
 	{
 		health -= _dmg;
 		
-		if (health < 0)
+		if (health <= 100)
 		{
-			
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Health : %f"), health);
 			//DIIEEEE
 		}
 	}
