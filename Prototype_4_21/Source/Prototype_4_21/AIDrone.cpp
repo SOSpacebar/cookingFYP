@@ -44,6 +44,11 @@ void AAIDrone::Tick(float _dt)
 		FRotator rotation = FRotationMatrix::MakeFromX(direction).Rotator();
 		this->SetActorRotation(rotation);
 	}
+
+	if (UGameplayStatics::GetPlayerController(GetWorld(), 0)->IsInputKeyDown(EKeys::O))
+	{
+		TestDamage();
+	}
 }
 
 // Called to bind functionality to input
@@ -63,6 +68,10 @@ void AAIDrone::TakeDamage_Implementation(float _dmg)
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Health : %f"), health);
 			//DIIEEEE
+			if (health <= 0)
+			{
+				Destroy();
+			}
 		}
 	}
 }
@@ -70,6 +79,12 @@ void AAIDrone::TakeDamage_Implementation(float _dmg)
 float AAIDrone::GetHealth_Implementation()
 {
 	return health;
+}
+
+void AAIDrone::TestDamage()
+{
+	health -= 20;
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Health : %f"), GetHealth_Implementation());
 }
 
 void AAIDrone::OnPlayerSighted(APawn * _pawn)
@@ -89,11 +104,11 @@ void AAIDrone::OnPlayerSighted(APawn * _pawn)
 		//TESTING
 		if (state == AI_DRONESTATES::COMBAT)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("I SEE YOU"));
+			//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("I SEE YOU"));
 		}
 		else
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("I SEE YOU"));
+			//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("I SEE YOU"));
 		}
 	}
 

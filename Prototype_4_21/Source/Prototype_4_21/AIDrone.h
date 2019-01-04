@@ -52,6 +52,9 @@ public:
 	// Interface for II_Damageable
 	virtual void TakeDamage_Implementation(float _dmg) override;
 	virtual float GetHealth_Implementation() override;
+
+	UFUNCTION(BlueprintCallable, Category = AI)
+		void TestDamage();
 private:
 	UFUNCTION()
 		void OnPlayerSighted(APawn *_pawn);
