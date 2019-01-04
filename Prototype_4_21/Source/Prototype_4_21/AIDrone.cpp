@@ -66,7 +66,7 @@ void AAIDrone::TakeDamage_Implementation(float _dmg)
 		
 		if (health <= 100)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Health : %f"), health);
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Health : %f"), health));
 			//DIIEEEE
 			if (health <= 0)
 			{
@@ -84,7 +84,7 @@ float AAIDrone::GetHealth_Implementation()
 void AAIDrone::TestDamage()
 {
 	health -= 20;
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Health : %f"), GetHealth_Implementation());
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Health : %f"), health));
 }
 
 void AAIDrone::OnPlayerSighted(APawn * _pawn)
