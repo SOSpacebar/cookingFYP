@@ -36,9 +36,6 @@ class PROTOTYPE_4_21_API AGameManager : public AGameModeBase
 public:
 	AGameManager();
 
-	virtual void BeginPlay() override;
-	virtual void Tick(float _dt) override;
-
 	UFUNCTION(BlueprintPure, Category = "GAMEMANAGER")
 	EPlayState GetCurrentState() const;
 
@@ -49,7 +46,14 @@ public:
 
 	void SetCurrScenario(EScenario _scenario);
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "GAMEMANAGER")
+	void RunEvent();
+
 private:
+	virtual void BeginPlay() override;
+	virtual void Tick(float _dt) override;
+
+
 	EPlayState currentState;
 	EScenario currScenario;
 

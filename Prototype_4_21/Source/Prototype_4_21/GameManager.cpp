@@ -2,10 +2,13 @@
 
 #include "GameManager.h"
 #include "Kismet/GameplayStatics.h"
+#include "OutputDeviceNull.h"
+
 
 AGameManager::AGameManager()
 {
-
+	PrimaryActorTick.bStartWithTickEnabled = true;
+	PrimaryActorTick.bCanEverTick = true;
 }
 
 void AGameManager::BeginPlay()
@@ -13,6 +16,9 @@ void AGameManager::BeginPlay()
 	Super::BeginPlay();
 	SetCurrentState(EPlayState::E_PLAYING);
 	SetCurrScenario(EScenario::E_INTRO);
+	
+	FOutputDeviceNull ar;
+	CallFunctionByNameWithArguments(TEXT("RunEvent"), ar, NULL, true);
 }
 
 void AGameManager::Tick(float _dt)
@@ -38,4 +44,8 @@ EScenario AGameManager::GetCurrScenario() const
 void AGameManager::SetCurrScenario(EScenario _scenario)
 {
 	currScenario = _scenario;
+}
+
+void AGameManager::RunEvent_Implementation()
+{
 }
