@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "I_Damageable.h"
-
 #include "AIDrone.generated.h"
 
 UENUM(BlueprintType)

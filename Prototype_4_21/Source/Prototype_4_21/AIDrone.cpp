@@ -18,6 +18,7 @@ AAIDrone::AAIDrone()
 	state = AI_DRONESTATES::IDLE;
 	target = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	health = 100.f;
+
 	PrimaryActorTick.bCanEverTick = true;
 }
 
