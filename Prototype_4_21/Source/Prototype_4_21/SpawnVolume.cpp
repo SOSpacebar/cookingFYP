@@ -4,6 +4,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Runtime/Engine/Public/TimerManager.h"
 #include "AIDrone.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ASpawnVolume::ASpawnVolume()
@@ -35,11 +36,28 @@ void ASpawnVolume::SpawnGameObject()
 			FVector spawnLocation = GetRandomPointInVolume();
 
 			FRotator spawnRotation;
-			spawnRotation.Yaw = 0;
-			spawnRotation.Roll = 0;
-			spawnRotation.Pitch = 0;
+			//spawnRotation.Yaw = 0;
+			//spawnRotation.Pitch = 0;
+			//spawnRotation.Roll = 0;
+			spawnRotation.ZeroRotator;
 
-			AAIDrone* const drone = world->SpawnActor<AAIDrone>(spawnObject, spawnLocation, spawnRotation, spawnParams);
+			FTransform spawnTransform = FTransform(spawnRotation, spawnLocation);
+
+			//AAIDrone* const drone = world->SpawnActor<AAIDrone>(spawnObject, spawnLocation, spawnRotation, spawnParams);
+
+			//Prespawning Drone for dynamical settings
+			AAIDrone* const drone = world->SpawnActorDeferred<AAIDrone>(spawnObject, spawnTransform, this, Instigator);
+			
+			if (drone)
+			{
+				//Set the details
+				drone->SetSpawnSide(true);
+
+				//Tell the engine to spawn
+				UGameplayStatics::FinishSpawningActor(drone, spawnTransform);
+				drone->FinishSpawning(spawnTransform);
+			}
+
 
 			// TODO SET AMOUNT SPAWN.
 			GetWorldTimerManager().SetTimer(spawnTimer, this, &ASpawnVolume::SpawnGameObject, spawnDelay, false);
