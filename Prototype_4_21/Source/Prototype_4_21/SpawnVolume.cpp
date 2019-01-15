@@ -36,12 +36,13 @@ void ASpawnVolume::SpawnGameObject()
 			FVector spawnLocation = GetRandomPointInVolume();
 
 			FRotator spawnRotation;
-			//spawnRotation.Yaw = 0;
-			//spawnRotation.Pitch = 0;
-			//spawnRotation.Roll = 0;
-			spawnRotation.ZeroRotator;
+			spawnRotation.Yaw = 0;
+			spawnRotation.Pitch = 0;
+			spawnRotation.Roll = 0;
 
-			FTransform spawnTransform = FTransform(spawnRotation, spawnLocation);
+
+			FTransform spawnTransform;
+			spawnTransform = FTransform(spawnRotation, spawnLocation);
 
 			//AAIDrone* const drone = world->SpawnActor<AAIDrone>(spawnObject, spawnLocation, spawnRotation, spawnParams);
 
