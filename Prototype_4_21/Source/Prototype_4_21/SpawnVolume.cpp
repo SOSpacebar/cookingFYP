@@ -52,7 +52,7 @@ void ASpawnVolume::SpawnGameObject()
 			if (drone)
 			{
 				//Set the details
-				drone->SetSpawnSide(true);
+				drone->SetSpawnSide(false);
 
 				//Tell the engine to spawn
 				UGameplayStatics::FinishSpawningActor(drone, spawnTransform);
