@@ -4,7 +4,6 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Runtime/Engine/Public/TimerManager.h"
 #include "AIDrone.h"
-#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ASpawnVolume::ASpawnVolume()
@@ -28,9 +27,9 @@ void ASpawnVolume::SpawnGameObject()
 		if (world)
 		{
 			// Setting spawn parameters
-			FActorSpawnParameters spawnParams;
-			spawnParams.Owner = this;
-			spawnParams.Instigator = Instigator;
+			//FActorSpawnParameters spawnParams;
+			//spawnParams.Owner = this;
+			//spawnParams.Instigator = Instigator;
 
 			// Get random location for spawn
 			FVector spawnLocation = GetRandomPointInVolume();
@@ -55,7 +54,7 @@ void ASpawnVolume::SpawnGameObject()
 				drone->SetSpawnSide(false);
 
 				//Tell the engine to spawn
-				UGameplayStatics::FinishSpawningActor(drone, spawnTransform);
+				//UGameplayStatics::FinishSpawningActor(drone, spawnTransform);
 				drone->FinishSpawning(spawnTransform);
 			}
 
