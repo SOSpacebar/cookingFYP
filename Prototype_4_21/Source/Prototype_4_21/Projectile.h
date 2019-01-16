@@ -18,9 +18,31 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	virtual void OnConstruction(const FTransform& _transform) override;
+	virtual void NotifyHit(UPrimitiveComponent* _myComp, AActor* _otherActor, UPrimitiveComponent* _otherComp, bool _bSelfMove, FVector _hitLocation, FVector _hitNormal, FVector _normalImpulse, const FHitResult& _hit) override;
+
+	// Projectile speed
+	UPROPERTY(EditAnywhere, Category = Projectile)
+		float fSpeed;
+
+	UPROPERTY(EditAnywhere, Category = Projectile)
+		float fBounceSpeedLoss;
+
 private:
 	UPROPERTY(VisibleDefaultsOnly, Category = Projectile)
-		TSubclassOf<class USphereComponent> collisionComp;
+		class USphereComponent *collisionComp;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Projectile, meta = (AllowPrivateAccess = "true"))
+		float collisionSize;
+
+	// Projectile velocity vector
+	FVector velocity;
+
+	// Flag for reflected
+	bool bReflected;
+
+	UFUNCTION()
+	void OnOverlapBegin(UPrimitiveComponent* _overlappedComp, class AActor* _otherActor, class UPrimitiveComponent* _otherComp, int32 _otherBodyIndex, bool _bFromSweep, const FHitResult& _sweepResult);
 
 protected:
 	// Called when the game starts or when spawned

@@ -47,6 +47,8 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = AI)
 		AI_DRONESTATES state;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AI)
+		TSubclassOf<class AProjectile> projectile;
 
 	// Interface for II_Damageable
 	virtual void TakeDamage_Implementation(float _dmg) override;
