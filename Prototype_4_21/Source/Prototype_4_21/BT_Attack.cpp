@@ -2,12 +2,15 @@
 
 #include "BT_Attack.h"
 #include "AIDrone_Controller.h"
+#include "AIDrone.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Projectile.h"
 
 EBTNodeResult::Type UBT_Attack::ExecuteTask(UBehaviorTreeComponent& _ownerComp, uint8* _nodeMemory)
 {
 	AAIDrone_Controller* aiCon = Cast<AAIDrone_Controller>(_ownerComp.GetAIOwner());
+	AAIDrone* aiDrone = Cast<AAIDrone>(aiCon->GetPawn());
 
 	if (aiCon)
 	{
@@ -16,9 +19,28 @@ EBTNodeResult::Type UBT_Attack::ExecuteTask(UBehaviorTreeComponent& _ownerComp, 
 
 		APlayerController* target = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 
-		FVector direction = target->GetPawn()->GetActorLocation() - aiCon->GetPawn()->GetActorLocation();
-		FRotator rotation = FRotationMatrix::MakeFromX(direction).Rotator();
-		aiCon->GetPawn()->SetActorRotation(rotation);
+		UWorld* const world = GetWorld();
+
+		if (world)
+		{
+			FActorSpawnParameters spawnParams;
+			spawnParams.Owner = aiCon;
+			spawnParams.Instigator = aiCon->Instigator;
+
+			FVector spawnLocation = aiDrone->GetActorLocation();
+			FRotator spawnRotation = aiDrone->GetActorRotation();
+
+			if (aiDrone->projectile)
+			{
+				world->SpawnActor<AProjectile>(aiDrone->projectile, spawnLocation, spawnRotation, spawnParams);
+			}
+			else
+			{
+				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("NULLLLLLLLLL")));
+			}
+
+
+		}
 
 		return EBTNodeResult::Succeeded;
 	}
