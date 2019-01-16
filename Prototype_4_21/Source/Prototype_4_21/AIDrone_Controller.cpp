@@ -2,7 +2,8 @@
 
 #include "AIDrone_Controller.h"
 #include "AIDrone.h"
-#include "AI_PathPoint.h"
+#include "AI_RightPathPoint.h"
+#include "AI_LeftPathPoint.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
@@ -43,7 +44,17 @@ void AAIDrone_Controller::Possess(APawn *_pawn)
 			blackBoardComponenet->InitializeBlackboard(*(aiCon->behaviorTree->BlackboardAsset));
 		}
 
-		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AAI_PathPoint::StaticClass(), pathPoints);
+		if (aiCon->GetSpawnSide())
+			UGameplayStatics::GetAllActorsOfClass(GetWorld(), AAI_RightPathPoint::StaticClass(), pathPoints);
+		else
+			UGameplayStatics::GetAllActorsOfClass(GetWorld(), AAI_LeftPathPoint::StaticClass(), pathPoints);
+
+		if (pathPoints.Num() <= 0)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("No Paths Assigned")));
+		}
+		
+		//UGameplayStatics::GetAllActorsOfClass(GetWorld(), AAI_PathPoint::StaticClass(), pathPoints);
 		behaviorTreeComponenet->StartTree(*aiCon->behaviorTree);
 	}
 }
