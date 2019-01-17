@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "I_Damageable.h"
-
 #include "AIDrone.generated.h"
 
 UENUM(BlueprintType)
@@ -48,10 +47,16 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = AI)
 		AI_DRONESTATES state;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AI)
+		TSubclassOf<class AProjectile> projectile;
 
 	// Interface for II_Damageable
 	virtual void TakeDamage_Implementation(float _dmg) override;
 	virtual float GetHealth_Implementation() override;
+
+	// True = Right Side, False = Left Side
+	FORCEINLINE void SetSpawnSide(bool _side) { isRightSide = _side; };
+	FORCEINLINE bool GetSpawnSide() { return isRightSide; };
 
 	UFUNCTION(BlueprintCallable, Category = AI)
 		void TestDamage();
@@ -61,4 +66,7 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AI, meta = (AllowPrivateAccess = "true"))
 		float health;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AI, meta = (AllowPrivateAccess = "true"))
+		bool isRightSide;
 };
