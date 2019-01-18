@@ -7,6 +7,7 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/Blackboard/BlackboardKeyType_Enum.h"
 #include "Kismet/GameplayStatics.h"
+#include "IXRTrackingSystem.h"
 
 // Sets default values
 AAIDrone::AAIDrone()
@@ -16,7 +17,7 @@ AAIDrone::AAIDrone()
 	sensor->SetPeripheralVisionAngle(90.f);
 
 	state = AI_DRONESTATES::IDLE;
-	target = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	playerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	health = 100.f;
 
 	PrimaryActorTick.bCanEverTick = true;
@@ -37,13 +38,28 @@ void AAIDrone::BeginPlay()
 
 void AAIDrone::Tick(float _dt)
 {
-	if (!target)
+	if (!playerController)
 	{
-		target = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+		playerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	}
-	if (target->GetPawn())
+
+	if (GEngine->XRSystem->GetHMDDevice())
 	{
-		FVector direction = target->GetPawn()->GetActorLocation() - this->GetActorLocation();
+		FVector direction;
+		FQuat playerQuat;
+		FVector playerVector;
+
+		GEngine->XRSystem->GetCurrentPose(IXRTrackingSystem::HMDDeviceId, playerQuat, playerVector);
+
+		FVector finalloc = playerQuat.RotateVector(playerVector) + playerController->PlayerCameraManager->GetCameraLocation();
+		direction = finalloc - this->GetActorLocation();
+		FRotator rotation = FRotationMatrix::MakeFromX(direction).Rotator();
+
+		this->SetActorRotation(rotation);
+	}
+	else if (playerController->GetPawn())
+	{
+		FVector direction = playerController->GetPawn()->GetActorLocation() - this->GetActorLocation();
 		FRotator rotation = FRotationMatrix::MakeFromX(direction).Rotator();
 		this->SetActorRotation(rotation);
 	}

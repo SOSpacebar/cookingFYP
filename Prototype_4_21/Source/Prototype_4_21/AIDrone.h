@@ -31,7 +31,7 @@ protected:
 
 	virtual void Tick(float _dt) override;
 
-	APlayerController* target;
+	APlayerController* playerController;
 
 public:	
 

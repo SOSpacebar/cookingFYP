@@ -21,6 +21,7 @@ EBTNodeResult::Type UBT_LookAtPlayer::ExecuteTask(UBehaviorTreeComponent& _owner
 		// Check is there a VR set.
 		if (GEngine->XRSystem->GetHMDDevice())
 		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("YEEEEEEEEEEEEET")));
 			FQuat playerQuat;
 			FVector playerVector;
 			GEngine->XRSystem->GetCurrentPose(IXRTrackingSystem::HMDDeviceId, playerQuat, playerVector);
@@ -29,6 +30,7 @@ EBTNodeResult::Type UBT_LookAtPlayer::ExecuteTask(UBehaviorTreeComponent& _owner
 		}
 		else
 		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("NOOOOOOOOO")));
 			direction = playerController->GetPawn()->GetActorLocation() - aiCon->GetPawn()->GetActorLocation();
 		}
 		
