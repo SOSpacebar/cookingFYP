@@ -27,7 +27,8 @@ EBTNodeResult::Type UBT_SelectNewPoint::ExecuteTask(UBehaviorTreeComponent& _own
 
 		if (aiCon->currentPoint != availablePathPoints.Num() - 1)
 		{
-			nextPoint = Cast<AAI_PathPoint>(availablePathPoints[++aiCon->currentPoint]);
+			int32 randomPoint = FMath::RandRange(0, availablePathPoints.Num() - 1);
+			nextPoint = Cast<AAI_PathPoint>(availablePathPoints[randomPoint]);
 		}
 		else
 		{

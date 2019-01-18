@@ -23,7 +23,7 @@ public:
 	FORCEINLINE UBoxComponent* GetSpawnBox() const { return spawningBox; };
 
 	UFUNCTION(BlueprintPure, Category = "Spawner")
-		FVector GetRandomPointInVolume();
+	FVector GetRandomPointInVolume();
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Spawner", meta = (AllowPrivateAccess = "True"))
@@ -48,4 +48,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawner")
 	float spawnDelayMaxRange;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawner")
+	uint8 spawnAmount;
 };

@@ -16,9 +16,6 @@ EBTNodeResult::Type UBT_Attack::ExecuteTask(UBehaviorTreeComponent& _ownerComp, 
 	{
 		// Get BB component
 		UBlackboardComponent* blackBoardComp = aiCon->GetBlackboardComponent();
-
-		APlayerController* target = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-
 		UWorld* const world = GetWorld();
 
 		if (world)

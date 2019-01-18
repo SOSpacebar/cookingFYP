@@ -48,4 +48,5 @@ void AGameManager::SetCurrScenario(EScenario _scenario)
 
 void AGameManager::RunEvent_Implementation()
 {
+
 }
