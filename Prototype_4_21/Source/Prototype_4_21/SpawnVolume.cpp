@@ -4,18 +4,19 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Runtime/Engine/Public/TimerManager.h"
 #include "AIDrone.h"
+#include "GameManager.h"
 
 // Sets default values
 ASpawnVolume::ASpawnVolume()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 
 	spawningBox = CreateDefaultSubobject<UBoxComponent>(TEXT("SpawnBox"));
 	RootComponent = spawningBox;
 
-	spawnDelayMinRange = 1.f;
-	spawnDelayMaxRange = 3.f;
+	spawnDelayMinRange = 2.f;
+	spawnDelayMaxRange = 4.f;
 }
 
 void ASpawnVolume::SpawnGameObject()
@@ -51,17 +52,48 @@ void ASpawnVolume::SpawnGameObject()
 			if (drone)
 			{
 				//Set the details
-				drone->SetSpawnSide(false);
+				switch (spawnSide)
+				{
+				case ESpawnSide::E_LEFT:
+					drone->SetSpawnSide(ESpawnSide::E_LEFT);
+					break;
+				case ESpawnSide::E_RIGHT:
+					drone->SetSpawnSide(ESpawnSide::E_RIGHT);
+					break;
+				case ESpawnSide::E_BOTH:
+					drone->SetSpawnSide(ESpawnSide::E_BOTH);
+					break;
+				case ESpawnSide::E_NONE:
+					break;
+				default:
+					break;
+				}
 
 				//Tell the engine to spawn
-				//UGameplayStatics::FinishSpawningActor(drone, spawnTransform);
 				drone->FinishSpawning(spawnTransform);
 			}
 
-
 			// TODO SET AMOUNT SPAWN.
-			GetWorldTimerManager().SetTimer(spawnTimer, this, &ASpawnVolume::SpawnGameObject, spawnDelay, false);
+			if (spawnAmount > 0)
+			{
+				GetWorldTimerManager().SetTimer(spawnTimer, this, &ASpawnVolume::SpawnGameObject, spawnDelay, false);
+				spawnAmount--;
+			}
+
 		}
+	}
+}
+
+void ASpawnVolume::HandleSpawnEvents(uint8 _event)
+{
+	//SpawnGameObject();
+	//gameManager->SetCurrScenario((EScenario)_event);
+	if (gameManager->GetCurrScenario() == EScenario::E_EVENT1)
+	{
+		//gameManager->SetCurrScenario((EScenario)_event);
+		spawnAmount = 25;
+		spawnSide = ESpawnSide::E_BOTH;
+		SpawnGameObject();
 	}
 }
 
@@ -69,9 +101,17 @@ void ASpawnVolume::SpawnGameObject()
 void ASpawnVolume::BeginPlay()
 {
 	Super::BeginPlay();
+
+	GetWorldTimerManager().SetTimer(spawnTimer, this, &ASpawnVolume::SpawnGameObject, spawnDelay, false);
 	
 	spawnDelay = FMath::FRandRange(spawnDelayMinRange, spawnDelayMaxRange);
-	GetWorldTimerManager().SetTimer(spawnTimer, this, &ASpawnVolume::SpawnGameObject, spawnDelay, false);
+
+	gameManager = (AGameManager*)GetWorld()->GetAuthGameMode();
+
+	if (gameManager)
+	{
+		gameManager->onScenarioComplete.AddDynamic(this, &ASpawnVolume::HandleSpawnEvents);
+	}
 }
 
 // Called every frame

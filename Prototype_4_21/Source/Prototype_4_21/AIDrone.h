@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "I_Damageable.h"
+#include "SpawnVolume.h"
 #include "AIDrone.generated.h"
 
 UENUM(BlueprintType)
@@ -31,7 +32,7 @@ protected:
 
 	virtual void Tick(float _dt) override;
 
-	APlayerController* target;
+	APlayerController* playerController;
 
 public:	
 
@@ -55,8 +56,8 @@ public:
 	virtual float GetHealth_Implementation() override;
 
 	// True = Right Side, False = Left Side
-	FORCEINLINE void SetSpawnSide(bool _side) { isRightSide = _side; };
-	FORCEINLINE bool GetSpawnSide() { return isRightSide; };
+	FORCEINLINE void SetSpawnSide(ESpawnSide _side) { spawnSide = _side; };
+	FORCEINLINE ESpawnSide GetSpawnSide() { return spawnSide; };
 
 	UFUNCTION(BlueprintCallable, Category = AI)
 		void TestDamage();
@@ -68,5 +69,5 @@ private:
 		float health;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AI, meta = (AllowPrivateAccess = "true"))
-		bool isRightSide;
+		ESpawnSide spawnSide;
 };

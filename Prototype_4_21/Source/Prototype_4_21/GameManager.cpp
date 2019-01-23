@@ -16,9 +16,7 @@ void AGameManager::BeginPlay()
 	Super::BeginPlay();
 	SetCurrentState(EPlayState::E_PLAYING);
 	SetCurrScenario(EScenario::E_INTRO);
-	
-	FOutputDeviceNull ar;
-	CallFunctionByNameWithArguments(TEXT("RunEvent"), ar, NULL, true);
+	onScenarioComplete.Broadcast(0);
 }
 
 void AGameManager::Tick(float _dt)
@@ -46,6 +44,8 @@ void AGameManager::SetCurrScenario(EScenario _scenario)
 	currScenario = _scenario;
 }
 
-void AGameManager::RunEvent_Implementation()
+void AGameManager::RunEvent_Implementation(uint8 _scenario)
 {
+	SetCurrScenario((EScenario)_scenario);
+	onScenarioComplete.Broadcast(_scenario);
 }
