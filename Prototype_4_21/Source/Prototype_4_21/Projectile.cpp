@@ -45,8 +45,8 @@ void AProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	FColor LineColor = bReflected ? FColor::Red : FColor::Green;
-	DrawDebugLine(GetWorld(), GetActorLocation(), GetActorLocation() + velocity * DeltaTime, LineColor, false, 2.f, 0, 1.f);
+	//FColor LineColor = bReflected ? FColor::Red : FColor::Green;
+	//DrawDebugLine(GetWorld(), GetActorLocation(), GetActorLocation() + velocity * DeltaTime, LineColor, false, 2.f, 0, 1.f);
 	SetActorLocation(GetActorLocation() + velocity * DeltaTime, true);
 }
 
