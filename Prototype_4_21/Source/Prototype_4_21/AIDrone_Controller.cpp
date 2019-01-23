@@ -8,6 +8,7 @@
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "SpawnVolume.h"
 
 AAIDrone_Controller::AAIDrone_Controller()
 {
@@ -44,10 +45,27 @@ void AAIDrone_Controller::Possess(APawn *_pawn)
 			blackBoardComponenet->InitializeBlackboard(*(aiCon->behaviorTree->BlackboardAsset));
 		}
 
-		if (aiCon->GetSpawnSide())
-			UGameplayStatics::GetAllActorsOfClass(GetWorld(), AAI_RightPathPoint::StaticClass(), pathPoints);
-		else
+		uint8 randomSide = FMath::RandRange(0, 1);
+
+		switch (aiCon->GetSpawnSide())
+		{
+		case ESpawnSide::E_LEFT:
 			UGameplayStatics::GetAllActorsOfClass(GetWorld(), AAI_LeftPathPoint::StaticClass(), pathPoints);
+			break;
+		case ESpawnSide::E_RIGHT:
+			UGameplayStatics::GetAllActorsOfClass(GetWorld(), AAI_RightPathPoint::StaticClass(), pathPoints);
+			break;
+		case ESpawnSide::E_BOTH:
+			if (randomSide == 0)
+				UGameplayStatics::GetAllActorsOfClass(GetWorld(), AAI_LeftPathPoint::StaticClass(), pathPoints);
+			else
+				UGameplayStatics::GetAllActorsOfClass(GetWorld(), AAI_RightPathPoint::StaticClass(), pathPoints);
+			break;
+		case ESpawnSide::E_NONE:
+			break;
+		default:
+			break;
+		}
 
 		if (pathPoints.Num() <= 0)
 		{

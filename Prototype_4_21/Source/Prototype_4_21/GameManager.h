@@ -10,6 +10,9 @@
  * 
  */
 
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegate_OnScenarioComplete, uint8, _scenario);
+
 UENUM(BlueprintType)
 enum class EPlayState : uint8
 {
@@ -46,8 +49,13 @@ public:
 
 	void SetCurrScenario(EScenario _scenario);
 
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Global Events")
+	FDelegate_OnScenarioComplete onScenarioComplete;
+
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "GAMEMANAGER")
-	void RunEvent();
+	void RunEvent(uint8 _scenario);
+	//void RunEvent();
+
 
 private:
 	virtual void BeginPlay() override;

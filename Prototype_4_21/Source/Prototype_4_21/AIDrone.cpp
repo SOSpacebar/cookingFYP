@@ -21,8 +21,7 @@ AAIDrone::AAIDrone()
 	health = 100.f;
 
 	PrimaryActorTick.bCanEverTick = true;
-
-	SetSpawnSide(true);
+	SetSpawnSide(ESpawnSide::E_NONE);
 }
 
 // Called when the game starts or when spawned
@@ -43,7 +42,8 @@ void AAIDrone::Tick(float _dt)
 		playerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	}
 
-	if (GEngine->XRSystem->GetHMDDevice())
+	//Check is there a VR headset
+	if (GEngine->XRSystem && GEngine->XRSystem->GetHMDDevice())
 	{
 		FVector direction;
 		FQuat playerQuat;
@@ -57,9 +57,9 @@ void AAIDrone::Tick(float _dt)
 
 		this->SetActorRotation(rotation);
 	}
-	else if (playerController->GetPawn())
+	else
 	{
-		FVector direction = playerController->GetPawn()->GetActorLocation() - this->GetActorLocation();
+		FVector direction = playerController->PlayerCameraManager->GetCameraLocation() - this->GetActorLocation();
 		FRotator rotation = FRotationMatrix::MakeFromX(direction).Rotator();
 		this->SetActorRotation(rotation);
 	}
