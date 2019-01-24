@@ -8,7 +8,6 @@
 
 
 class UBehaviorTreeComponent;
-class Actor;
 
 /**
  * 

@@ -21,7 +21,7 @@ ASpawnVolume::ASpawnVolume()
 
 void ASpawnVolume::SpawnGameObject()
 {
-	if (spawnObject != NULL)
+	if (spawnObject[0] != NULL)
 	{
 		UWorld* const world = GetWorld();
 
@@ -47,7 +47,7 @@ void ASpawnVolume::SpawnGameObject()
 			//AAIDrone* const drone = world->SpawnActor<AAIDrone>(spawnObject, spawnLocation, spawnRotation, spawnParams);
 
 			//Prespawning Drone for dynamical settings
-			AAIDrone* const drone = world->SpawnActorDeferred<AAIDrone>(spawnObject, spawnTransform, this, Instigator);
+			AAIDrone* const drone = world->SpawnActorDeferred<AAIDrone>(spawnObject[0], spawnTransform, this, Instigator);
 			
 			if (drone)
 			{
