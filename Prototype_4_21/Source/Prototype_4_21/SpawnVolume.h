@@ -44,13 +44,13 @@ private:
 	UFUNCTION(Category = "Spawner")
 	void HandleSpawnEvents(uint8 _event);
 
+	// My Spawn Object
+	UPROPERTY(EditAnywhere, Category = "Spawner", meta = (AllowPrivateAccess = "True"))
+		TArray<TSubclassOf<class AAIDrone>> spawnObject;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-	// My Spawn Object
-	UPROPERTY(EditAnywhere, Category = "Spawner")
-	TSubclassOf<class AAIDrone> spawnObject;
 
 	FTimerHandle spawnTimer;
 	class AGameManager *gameManager;

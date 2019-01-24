@@ -21,7 +21,7 @@ ASpawnVolume::ASpawnVolume()
 
 void ASpawnVolume::SpawnGameObject()
 {
-	if (spawnObject != NULL)
+	if (spawnObject.Num() > 0)
 	{
 		UWorld* const world = GetWorld();
 
@@ -43,11 +43,12 @@ void ASpawnVolume::SpawnGameObject()
 
 			FTransform spawnTransform;
 			spawnTransform = FTransform(spawnRotation, spawnLocation);
-
+			int32 maxSpawn = spawnObject.Num() - 1;
 			//AAIDrone* const drone = world->SpawnActor<AAIDrone>(spawnObject, spawnLocation, spawnRotation, spawnParams);
+			int32 randomNum = FMath::RandRange(0, maxSpawn);
 
 			//Prespawning Drone for dynamical settings
-			AAIDrone* const drone = world->SpawnActorDeferred<AAIDrone>(spawnObject, spawnTransform, this, Instigator);
+			AAIDrone* const drone = world->SpawnActorDeferred<AAIDrone>(spawnObject[randomNum], spawnTransform, this, Instigator);
 			
 			if (drone)
 			{
