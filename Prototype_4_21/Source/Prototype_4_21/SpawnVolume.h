@@ -41,6 +41,8 @@ private:
 
 	void SpawnGameObject();
 
+	void DestoryAll();
+
 	UFUNCTION(Category = "Spawner")
 	void HandleSpawnEvents(uint8 _event);
 

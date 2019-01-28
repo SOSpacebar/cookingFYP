@@ -7,6 +7,7 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/Blackboard/BlackboardKeyType_Enum.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/SkeletalMeshComponent.h"
 #include "IXRTrackingSystem.h"
 
 // Sets default values
@@ -20,6 +21,7 @@ AAIDrone::AAIDrone()
 	playerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	health = 100.f;
 	isDead = true;
+	removeTimer = 5.f;
 
 	PrimaryActorTick.bCanEverTick = true;
 	SetSpawnSide(ESpawnSide::E_NONE);
@@ -75,6 +77,14 @@ void AAIDrone::Tick(float _dt)
 	if (state == AI_DRONESTATES::DEAD)
 	{
 		isDead = true;
+		removeTimer -= _dt;
+
+		if (removeTimer < 0)
+		{
+			SetActorHiddenInGame(true);
+			// Disables collision components
+			SetActorEnableCollision(false);
+		}
 	}
 }
 
@@ -93,7 +103,7 @@ void AAIDrone::TakeDamage_Implementation(float _dmg)
 		
 		if (health <= 100)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Health : %f"), health));
+			//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Health : %f"), health));
 			//DIIEEEE
 			if (health <= 0)
 			{
@@ -101,11 +111,14 @@ void AAIDrone::TakeDamage_Implementation(float _dmg)
 				AAIDrone_Controller* aiCon = Cast<AAIDrone_Controller>(GetController());
 				// Get BB component
 				UBlackboardComponent* blackBoardComp = aiCon->GetBlackboardComponent();
+				// Get capsule compontent
+				USkeletalMeshComponent* mesh = GetMesh();
 
 				state = AI_DRONESTATES::DEAD;
 				// Set key value in black board.
 				blackBoardComp->SetValue<UBlackboardKeyType_Enum>(blackBoardComp->GetKeyID("State"), static_cast<UBlackboardKeyType_Enum::FDataType>(state));
-
+				mesh->SetSimulatePhysics(true);
+				aiCon->UnPossess();
 				//Destroy();
 			}
 		}
@@ -120,7 +133,7 @@ float AAIDrone::GetHealth_Implementation()
 void AAIDrone::TestDamage()
 {
 	health -= 20;
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Health : %f"), health));
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Health : %f"), health));
 }
 
 void AAIDrone::OnPlayerSighted(APawn * _pawn)

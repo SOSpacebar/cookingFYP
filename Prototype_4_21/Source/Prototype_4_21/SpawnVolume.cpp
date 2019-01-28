@@ -93,6 +93,19 @@ void ASpawnVolume::SpawnGameObject()
 	}
 }
 
+void ASpawnVolume::DestoryAll()
+{
+	if (enemiesList.Num() > 0)
+	{
+		for (size_t i = 0; i < enemiesList.Num() - 1; i++)
+		{
+			enemiesList[i]->Destroy();
+		}
+	}
+
+	enemiesList.Empty();
+}
+
 void ASpawnVolume::HandleSpawnEvents(uint8 _event)
 {
 	//SpawnGameObject();
@@ -141,9 +154,11 @@ void ASpawnVolume::Tick(float DeltaTime)
 				else if (i == enemiesList.Num() - 1)
 				{
 					// ALL ENEMY DEAD
+					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("ALL DEAD")));
 					uint8 currentScenario = (uint8)(gameManager->GetCurrScenario());
 					checkEnemyList = false;
 					gameManager->onScenarioComplete.Broadcast(++currentScenario);
+					enemiesList.Empty();
 				}
 			}
 		}
