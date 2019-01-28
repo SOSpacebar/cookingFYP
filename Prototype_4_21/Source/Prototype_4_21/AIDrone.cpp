@@ -19,6 +19,7 @@ AAIDrone::AAIDrone()
 	state = AI_DRONESTATES::IDLE;
 	playerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	health = 100.f;
+	isDead = true;
 
 	PrimaryActorTick.bCanEverTick = true;
 	SetSpawnSide(ESpawnSide::E_NONE);
@@ -33,6 +34,8 @@ void AAIDrone::BeginPlay()
 	{
 		sensor->OnSeePawn.AddDynamic(this, &AAIDrone::OnPlayerSighted);
 	}
+
+	isDead = false;
 }
 
 void AAIDrone::Tick(float _dt)
@@ -68,6 +71,11 @@ void AAIDrone::Tick(float _dt)
 	{
 		TestDamage();
 	}
+
+	if (state == AI_DRONESTATES::DEAD)
+	{
+		isDead = true;
+	}
 }
 
 // Called to bind functionality to input
@@ -89,7 +97,16 @@ void AAIDrone::TakeDamage_Implementation(float _dmg)
 			//DIIEEEE
 			if (health <= 0)
 			{
-				Destroy();
+				// Get reference to player
+				AAIDrone_Controller* aiCon = Cast<AAIDrone_Controller>(GetController());
+				// Get BB component
+				UBlackboardComponent* blackBoardComp = aiCon->GetBlackboardComponent();
+
+				state = AI_DRONESTATES::DEAD;
+				// Set key value in black board.
+				blackBoardComp->SetValue<UBlackboardKeyType_Enum>(blackBoardComp->GetKeyID("State"), static_cast<UBlackboardKeyType_Enum::FDataType>(state));
+
+				//Destroy();
 			}
 		}
 	}
@@ -108,6 +125,11 @@ void AAIDrone::TestDamage()
 
 void AAIDrone::OnPlayerSighted(APawn * _pawn)
 {
+	if (state == AI_DRONESTATES::DEAD)
+	{
+		return;
+	}
+
 	// Get reference to player
 	AAIDrone_Controller* aiCon = Cast<AAIDrone_Controller>(GetController());
 

@@ -17,6 +17,8 @@ ASpawnVolume::ASpawnVolume()
 
 	spawnDelayMinRange = 2.f;
 	spawnDelayMaxRange = 4.f;
+
+	checkEnemyList = false;
 }
 
 void ASpawnVolume::SpawnGameObject()
@@ -49,7 +51,8 @@ void ASpawnVolume::SpawnGameObject()
 
 			//Prespawning Drone for dynamical settings
 			AAIDrone* const drone = world->SpawnActorDeferred<AAIDrone>(spawnObject[randomNum], spawnTransform, this, Instigator);
-			
+			enemiesList.Add(drone);
+
 			if (drone)
 			{
 				//Set the details
@@ -70,6 +73,7 @@ void ASpawnVolume::SpawnGameObject()
 					break;
 				}
 
+				drone->isDead = false;
 				//Tell the engine to spawn
 				drone->FinishSpawning(spawnTransform);
 			}
@@ -79,6 +83,10 @@ void ASpawnVolume::SpawnGameObject()
 			{
 				GetWorldTimerManager().SetTimer(spawnTimer, this, &ASpawnVolume::SpawnGameObject, spawnDelay, false);
 				spawnAmount--;
+			}
+			else
+			{
+				checkEnemyList = true;
 			}
 
 		}
@@ -120,6 +128,26 @@ void ASpawnVolume::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (checkEnemyList)
+	{
+		if (enemiesList.Num() > 0)
+		{
+			for (size_t i = 0; i < enemiesList.Num() - 1; i++)
+			{
+				if (!enemiesList[i]->isDead) //CHECK IS DRONE ALIVE
+				{
+					break;
+				}
+				else if (i == enemiesList.Num() - 1)
+				{
+					// ALL ENEMY DEAD
+					uint8 currentScenario = (uint8)(gameManager->GetCurrScenario());
+					checkEnemyList = false;
+					gameManager->onScenarioComplete.Broadcast(++currentScenario);
+				}
+			}
+		}
+	}
 }
 
 FVector ASpawnVolume::GetRandomPointInVolume()
