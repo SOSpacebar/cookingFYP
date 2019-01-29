@@ -45,7 +45,7 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = AI)
 		class UPawnSensingComponent* sensor;
 
-	UPROPERTY(VisibleAnywhere, Category = AI)
+	UPROPERTY(EditAnywhere, Category = AI)
 		AI_DRONESTATES state;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AI)
@@ -61,6 +61,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = AI)
 		void TestDamage();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawner")
+		bool isDead;
 private:
 	UFUNCTION()
 		void OnPlayerSighted(APawn *_pawn);
@@ -70,4 +73,6 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AI, meta = (AllowPrivateAccess = "true"))
 		ESpawnSide spawnSide;
+
+	float removeTimer;
 };

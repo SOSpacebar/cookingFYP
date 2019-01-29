@@ -7,7 +7,9 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/Blackboard/BlackboardKeyType_Enum.h"
 #include "Kismet/GameplayStatics.h"
-#include "IXRTrackingSystem.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "Animation/AnimInstance.h"
+#include "Runtime/HeadMountedDisplay/Public/IXRTrackingSystem.h"
 
 // Sets default values
 AAIDrone::AAIDrone()
@@ -19,6 +21,8 @@ AAIDrone::AAIDrone()
 	state = AI_DRONESTATES::IDLE;
 	playerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	health = 100.f;
+	isDead = true;
+	removeTimer = 5.f;
 
 	PrimaryActorTick.bCanEverTick = true;
 	SetSpawnSide(ESpawnSide::E_NONE);
@@ -33,6 +37,8 @@ void AAIDrone::BeginPlay()
 	{
 		sensor->OnSeePawn.AddDynamic(this, &AAIDrone::OnPlayerSighted);
 	}
+
+	isDead = false;
 }
 
 void AAIDrone::Tick(float _dt)
@@ -68,6 +74,19 @@ void AAIDrone::Tick(float _dt)
 	{
 		TestDamage();
 	}
+
+	if (state == AI_DRONESTATES::DEAD)
+	{
+		isDead = true;
+		removeTimer -= _dt;
+
+		if (removeTimer < 0)
+		{
+			SetActorHiddenInGame(true);
+			// Disables collision components
+			SetActorEnableCollision(false);
+		}
+	}
 }
 
 // Called to bind functionality to input
@@ -85,11 +104,24 @@ void AAIDrone::TakeDamage_Implementation(float _dmg)
 		
 		if (health <= 100)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Health : %f"), health));
+			//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Health : %f"), health));
 			//DIIEEEE
 			if (health <= 0)
 			{
-				Destroy();
+				// Get reference to player
+				AAIDrone_Controller* aiCon = Cast<AAIDrone_Controller>(GetController());
+				// Get BB component
+				UBlackboardComponent* blackBoardComp = aiCon->GetBlackboardComponent();
+				// Get capsule compontent
+				USkeletalMeshComponent* mesh = GetMesh();
+
+				state = AI_DRONESTATES::DEAD;
+				// Set key value in black board.
+				blackBoardComp->SetValue<UBlackboardKeyType_Enum>(blackBoardComp->GetKeyID("State"), static_cast<UBlackboardKeyType_Enum::FDataType>(state));
+				mesh->SetSimulatePhysics(true);
+				mesh->GetAnimInstance()->StopSlotAnimation();
+				aiCon->UnPossess();
+				//Destroy();
 			}
 		}
 	}
@@ -103,11 +135,16 @@ float AAIDrone::GetHealth_Implementation()
 void AAIDrone::TestDamage()
 {
 	health -= 20;
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Health : %f"), health));
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Health : %f"), health));
 }
 
 void AAIDrone::OnPlayerSighted(APawn * _pawn)
 {
+	if (state == AI_DRONESTATES::DEAD)
+	{
+		return;
+	}
+
 	// Get reference to player
 	AAIDrone_Controller* aiCon = Cast<AAIDrone_Controller>(GetController());
 

@@ -56,7 +56,6 @@ public:
 	void RunEvent(uint8 _scenario);
 	//void RunEvent();
 
-
 private:
 	virtual void BeginPlay() override;
 	virtual void Tick(float _dt) override;

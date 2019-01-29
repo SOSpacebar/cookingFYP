@@ -41,18 +41,25 @@ private:
 
 	void SpawnGameObject();
 
+	void DestoryAll();
+
 	UFUNCTION(Category = "Spawner")
 	void HandleSpawnEvents(uint8 _event);
 
 	// My Spawn Object
 	UPROPERTY(EditAnywhere, Category = "Spawner", meta = (AllowPrivateAccess = "True"))
 		TArray<TSubclassOf<class AAIDrone>> spawnObject;
+	
+	// My enemy list Object
+	UPROPERTY(EditAnywhere, Category = "Spawner", meta = (AllowPrivateAccess = "True"))
+		TArray<class AAIDrone*> enemiesList;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	FTimerHandle spawnTimer;
+
 	class AGameManager *gameManager;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawner")
@@ -66,4 +73,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawner")
 	ESpawnSide spawnSide;
+
+
+	bool checkEnemyList;
 };
