@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "GameFramework/Character.h"
 #include "AIShipProps.generated.h"
 
 UCLASS()
-class PROTOTYPE_4_21_API AAIShipProps : public APawn
+class PROTOTYPE_4_21_API AAIShipProps : public ACharacter
 {
 	GENERATED_BODY()
 	
@@ -24,9 +24,6 @@ public:
 	FORCEINLINE TArray<AActor*> GetPathArray() const { return pathPoints; };
 
 private:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = AIShipProps, meta = (AllowPrivateAccess = "true"))
-	UStaticMeshComponent* model;
-
 	UPROPERTY(EditAnywhere, Category = AIShipProps, meta = (AllowPrivateAccess = "true"))
 	TArray<AActor*> pathPoints;
 

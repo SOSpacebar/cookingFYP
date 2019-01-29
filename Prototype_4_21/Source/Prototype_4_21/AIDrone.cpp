@@ -8,7 +8,8 @@
 #include "BehaviorTree/Blackboard/BlackboardKeyType_Enum.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/SkeletalMeshComponent.h"
-#include "IXRTrackingSystem.h"
+#include "Animation/AnimInstance.h"
+#include "Runtime/HeadMountedDisplay/Public/IXRTrackingSystem.h"
 
 // Sets default values
 AAIDrone::AAIDrone()
@@ -118,6 +119,7 @@ void AAIDrone::TakeDamage_Implementation(float _dmg)
 				// Set key value in black board.
 				blackBoardComp->SetValue<UBlackboardKeyType_Enum>(blackBoardComp->GetKeyID("State"), static_cast<UBlackboardKeyType_Enum::FDataType>(state));
 				mesh->SetSimulatePhysics(true);
+				mesh->GetAnimInstance()->StopSlotAnimation();
 				aiCon->UnPossess();
 				//Destroy();
 			}
