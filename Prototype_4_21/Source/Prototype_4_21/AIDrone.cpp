@@ -9,6 +9,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Animation/AnimInstance.h"
+#include "Runtime/Engine/Classes/Particles/ParticleSystemComponent.h"
 #include "Runtime/HeadMountedDisplay/Public/IXRTrackingSystem.h"
 
 // Sets default values
@@ -17,6 +18,10 @@ AAIDrone::AAIDrone()
 	//Initialize sensor
 	sensor = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensingComp"));
 	sensor->SetPeripheralVisionAngle(90.f);
+
+	particleDeath = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Death Particle"));
+	particleDeath->SetupAttachment(GetMesh());
+	//particleDeath->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, NAME_None);
 
 	state = AI_DRONESTATES::IDLE;
 	playerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
@@ -39,6 +44,8 @@ void AAIDrone::BeginPlay()
 	}
 
 	isDead = false;
+	particleDeath->bAutoActivate = false;
+	particleDeath->SetRelativeScale3D(GetActorRelativeScale3D());
 }
 
 void AAIDrone::Tick(float _dt)
@@ -79,12 +86,14 @@ void AAIDrone::Tick(float _dt)
 	{
 		isDead = true;
 		removeTimer -= _dt;
+		particleDeath->Activate(false);
 
 		if (removeTimer < 0)
 		{
 			SetActorHiddenInGame(true);
 			// Disables collision components
 			SetActorEnableCollision(false);
+			particleDeath->Deactivate();
 		}
 	}
 }
