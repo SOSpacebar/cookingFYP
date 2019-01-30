@@ -51,6 +51,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AI)
 		TSubclassOf<class AProjectile> projectile;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AI)
+		class UParticleSystemComponent* particleDeath;
+
 	// Interface for II_Damageable
 	virtual void TakeDamage_Implementation(float _dmg) override;
 	virtual float GetHealth_Implementation() override;
