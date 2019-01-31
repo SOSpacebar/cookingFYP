@@ -45,7 +45,7 @@ void AAIDrone::BeginPlay()
 
 	isDead = false;
 	particleDeath->bAutoActivate = false;
-	particleDeath->SetRelativeScale3D(GetActorRelativeScale3D());
+	//particleDeath->SetRelativeScale3D(GetActorRelativeScale3D());
 }
 
 void AAIDrone::Tick(float _dt)
