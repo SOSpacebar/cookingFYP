@@ -107,7 +107,7 @@ void AAIDrone::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AAIDrone::TakeDamage_Implementation(float _dmg)
 {
-	if (health)
+	if (health > 0)
 	{
 		health -= _dmg;
 		
