@@ -4,19 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTTaskNode.h"
-#include "BT_Attack.generated.h"
+#include "MyBT_DroneSelectNextPoint.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROTOTYPE_4_21_API UBT_Attack : public UBTTaskNode
+class PROTOTYPE_4_21_API UMyBT_DroneSelectNextPoint : public UBTTaskNode
 {
 	GENERATED_BODY()
 	
 private:
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& _ownerComp, uint8* _nodeMemory) override;
-	virtual void TickTask(UBehaviorTreeComponent& _ownerComp, uint8* _nodeMemory, float _dt) override;
-	float timer;
-	uint8 shotsFiredCounter;
 };

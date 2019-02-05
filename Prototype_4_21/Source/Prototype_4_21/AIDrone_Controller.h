@@ -29,7 +29,9 @@ public:
 
 	int32 currentPoint;
 
-private:
+
+protected:
+	virtual void Possess(APawn *_pawn) override;
 
 	UBlackboardComponent *blackBoardComponenet;
 	UBehaviorTreeComponent *behaviorTreeComponenet;
@@ -43,5 +45,4 @@ private:
 
 	TArray<AActor*> pathPoints;
 
-	virtual void Possess(APawn *_pawn) override;
 };

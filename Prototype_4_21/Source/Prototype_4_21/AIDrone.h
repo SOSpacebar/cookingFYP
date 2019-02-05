@@ -62,6 +62,10 @@ public:
 	FORCEINLINE void SetSpawnSide(ESpawnSide _side) { spawnSide = _side; };
 	FORCEINLINE ESpawnSide GetSpawnSide() { return spawnSide; };
 
+	FORCEINLINE float GetFireRate() { return fireRate; };
+
+	FORCEINLINE uint8 GetAvailableShots() { return availableShots; };
+
 	UFUNCTION(BlueprintCallable, Category = AI)
 		void TestDamage();
 
@@ -75,7 +79,17 @@ private:
 		float health;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AI, meta = (AllowPrivateAccess = "true"))
+		float fireRate;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AI, meta = (AllowPrivateAccess = "true"))
+		uint8 minShots;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AI, meta = (AllowPrivateAccess = "true"))
+		uint8 maxShots;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AI, meta = (AllowPrivateAccess = "true"))
 		ESpawnSide spawnSide;
 
 	float removeTimer;
+	uint8 availableShots;
 };

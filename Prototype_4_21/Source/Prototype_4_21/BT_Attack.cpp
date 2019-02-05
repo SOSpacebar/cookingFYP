@@ -9,38 +9,59 @@
 
 EBTNodeResult::Type UBT_Attack::ExecuteTask(UBehaviorTreeComponent& _ownerComp, uint8* _nodeMemory)
 {
+	//AAIDrone_Controller* aiCon = Cast<AAIDrone_Controller>(_ownerComp.GetAIOwner());
+	//AAIDrone* aiDrone = Cast<AAIDrone>(aiCon->GetPawn());
+	timer = 0.f;
+	shotsFiredCounter = 0.f;
+	bNotifyTick = true;
+
+	return EBTNodeResult::InProgress;
+}
+
+void UBT_Attack::TickTask(UBehaviorTreeComponent & _ownerComp, uint8 * _nodeMemory, float _dt)
+{
+	Super::TickTask(_ownerComp, _nodeMemory, _dt);
+
 	AAIDrone_Controller* aiCon = Cast<AAIDrone_Controller>(_ownerComp.GetAIOwner());
 	AAIDrone* aiDrone = Cast<AAIDrone>(aiCon->GetPawn());
 
 	if (aiCon)
 	{
+
 		// Get BB component
 		UBlackboardComponent* blackBoardComp = aiCon->GetBlackboardComponent();
 		UWorld* const world = GetWorld();
 
 		if (world)
 		{
-			FActorSpawnParameters spawnParams;
-			spawnParams.Owner = aiCon;
-			spawnParams.Instigator = aiCon->Instigator;
-
-			FVector spawnLocation = aiDrone->GetActorLocation();
-			FRotator spawnRotation = aiDrone->GetActorRotation();
-
-			if (aiDrone->projectile)
+			timer += _dt;
+			//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("PEWPEWP + %d"), aiDrone->GetFireRate()));
+			if (timer > aiDrone->GetFireRate())
 			{
-				world->SpawnActor<AProjectile>(aiDrone->projectile, spawnLocation, spawnRotation, spawnParams);
-			}
-			else
-			{
-				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("NULLLLLLLLLL")));
-			}
+				FActorSpawnParameters spawnParams;
+				spawnParams.Owner = aiCon;
+				spawnParams.Instigator = aiCon->Instigator;
 
+				FVector spawnLocation = aiDrone->GetActorLocation();
+				FRotator spawnRotation = aiDrone->GetActorRotation();
 
+				if (aiDrone->projectile)
+				{
+					world->SpawnActor<AProjectile>(aiDrone->projectile, spawnLocation, spawnRotation, spawnParams);
+				}
+				else
+				{
+					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("NULLLLLLLLLL")));
+				}
+
+				shotsFiredCounter++;
+				timer = 0.f;
+			}
 		}
 
-		return EBTNodeResult::Succeeded;
+		if (shotsFiredCounter >= aiDrone->GetAvailableShots())
+		{
+			FinishLatentTask(_ownerComp, EBTNodeResult::Succeeded);
+		}
 	}
-
-	return EBTNodeResult::Failed;
 }
