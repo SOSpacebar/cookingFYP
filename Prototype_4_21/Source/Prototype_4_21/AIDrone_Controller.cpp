@@ -8,6 +8,7 @@
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "SpawnVolume.h"
 
 AAIDrone_Controller::AAIDrone_Controller()
@@ -37,6 +38,10 @@ void AAIDrone_Controller::Possess(APawn *_pawn)
 
 	// Reference To Character
 	AAIDrone* aiCon = Cast<AAIDrone>(_pawn);
+
+	//Set Random Movement Speed
+	float randomSpeed = FMath::FRandRange(6000, 15000);
+	GetCharacter()->GetCharacterMovement()->MaxFlySpeed = randomSpeed;
 
 	if (aiCon)
 	{
@@ -71,8 +76,7 @@ void AAIDrone_Controller::Possess(APawn *_pawn)
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("No Paths Assigned")));
 		}
-		
-		//UGameplayStatics::GetAllActorsOfClass(GetWorld(), AAI_PathPoint::StaticClass(), pathPoints);
+
 		behaviorTreeComponenet->StartTree(*aiCon->behaviorTree);
 	}
 }

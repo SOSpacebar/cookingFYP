@@ -29,6 +29,12 @@ AAIDrone::AAIDrone()
 	isDead = true;
 	removeTimer = 5.f;
 
+	fireRate = 0.f;
+	minShots = 0.f;
+	maxShots = 0.f;
+
+	availableShots = 0;
+
 	PrimaryActorTick.bCanEverTick = true;
 	SetSpawnSide(ESpawnSide::E_NONE);
 }
@@ -45,6 +51,7 @@ void AAIDrone::BeginPlay()
 
 	isDead = false;
 	particleDeath->bAutoActivate = false;
+	availableShots = FMath::RandRange(minShots, maxShots);
 	//particleDeath->SetRelativeScale3D(GetActorRelativeScale3D());
 }
 
