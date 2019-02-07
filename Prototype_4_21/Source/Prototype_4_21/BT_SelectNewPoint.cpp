@@ -22,6 +22,7 @@ EBTNodeResult::Type UBT_SelectNewPoint::ExecuteTask(UBehaviorTreeComponent& _own
 
 		if (availablePathPoints.Num() == 0) // Return if no paths.
 		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("NO PATH")));
 			return EBTNodeResult::Aborted;
 		}
 

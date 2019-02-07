@@ -21,6 +21,7 @@ AAIDrone::AAIDrone()
 
 	particleDeath = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Death Particle"));
 	particleDeath->SetupAttachment(GetMesh());
+	particleDeath->bAutoActivate = false;
 	//particleDeath->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, NAME_None);
 
 	state = AI_DRONESTATES::IDLE;
@@ -114,31 +115,24 @@ void AAIDrone::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AAIDrone::TakeDamage_Implementation(float _dmg)
 {
-	if (health > 0)
+	if (state != AI_DRONESTATES::DEAD)
 	{
 		health -= _dmg;
-		
-		if (health <= 100)
-		{
-			//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Health : %f"), health));
-			//DIIEEEE
-			if (health <= 0)
-			{
-				// Get reference to player
-				AAIDrone_Controller* aiCon = Cast<AAIDrone_Controller>(GetController());
-				// Get BB component
-				UBlackboardComponent* blackBoardComp = aiCon->GetBlackboardComponent();
-				// Get capsule compontent
-				USkeletalMeshComponent* mesh = GetMesh();
 
-				state = AI_DRONESTATES::DEAD;
-				// Set key value in black board.
-				blackBoardComp->SetValue<UBlackboardKeyType_Enum>(blackBoardComp->GetKeyID("State"), static_cast<UBlackboardKeyType_Enum::FDataType>(state));
-				mesh->SetSimulatePhysics(true);
-				mesh->GetAnimInstance()->StopSlotAnimation();
-				aiCon->UnPossess();
-				//Destroy();
-			}
+		if (health <= 0)
+		{
+			AAIDrone_Controller* aiCon = Cast<AAIDrone_Controller>(GetController());
+			// Get BB component
+			UBlackboardComponent* blackBoardComp = aiCon->GetBlackboardComponent();
+			// Get capsule compontent
+			USkeletalMeshComponent* mesh = GetMesh();
+
+			state = AI_DRONESTATES::DEAD;
+			// Set key value in black board.
+			blackBoardComp->SetValue<UBlackboardKeyType_Enum>(blackBoardComp->GetKeyID("State"), static_cast<UBlackboardKeyType_Enum::FDataType>(state));
+			mesh->SetSimulatePhysics(true);
+			mesh->GetAnimInstance()->StopSlotAnimation();
+			aiCon->UnPossess();
 		}
 	}
 }
@@ -164,11 +158,10 @@ void AAIDrone::OnPlayerSighted(APawn * _pawn)
 	// Get reference to player
 	AAIDrone_Controller* aiCon = Cast<AAIDrone_Controller>(GetController());
 
-	// Get BB component
-	UBlackboardComponent* blackBoardComp = aiCon->GetBlackboardComponent();
-
 	if (aiCon)
 	{
+		// Get BB component
+		UBlackboardComponent* blackBoardComp = aiCon->GetBlackboardComponent();
 
 		aiCon->SetPlayerCoord(_pawn);
 		state = AI_DRONESTATES::COMBAT;
@@ -182,9 +175,9 @@ void AAIDrone::OnPlayerSighted(APawn * _pawn)
 		{
 			//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("I SEE YOU"));
 		}
-	}
 
-	// Set key value in black board.
-	blackBoardComp->SetValue<UBlackboardKeyType_Enum>(blackBoardComp->GetKeyID("State"), static_cast<UBlackboardKeyType_Enum::FDataType>(state));
+		// Set key value in black board.
+		blackBoardComp->SetValue<UBlackboardKeyType_Enum>(blackBoardComp->GetKeyID("State"), static_cast<UBlackboardKeyType_Enum::FDataType>(state));
+	}
 }
 

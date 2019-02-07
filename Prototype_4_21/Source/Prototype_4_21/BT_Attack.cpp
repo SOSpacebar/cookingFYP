@@ -32,7 +32,7 @@ void UBT_Attack::TickTask(UBehaviorTreeComponent & _ownerComp, uint8 * _nodeMemo
 		UBlackboardComponent* blackBoardComp = aiCon->GetBlackboardComponent();
 		UWorld* const world = GetWorld();
 
-		if (world)
+		if (world && aiDrone)
 		{
 			timer += _dt;
 			//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("PEWPEWP + %d"), aiDrone->GetFireRate()));
@@ -60,11 +60,13 @@ void UBT_Attack::TickTask(UBehaviorTreeComponent & _ownerComp, uint8 * _nodeMemo
 				shotsFiredCounter++;
 				timer = 0.f;
 			}
+
+			if (shotsFiredCounter >= aiDrone->GetAvailableShots())
+			{
+				FinishLatentTask(_ownerComp, EBTNodeResult::Succeeded);
+			}
 		}
 
-		if (shotsFiredCounter >= aiDrone->GetAvailableShots())
-		{
-			FinishLatentTask(_ownerComp, EBTNodeResult::Succeeded);
-		}
+
 	}
 }

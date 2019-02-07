@@ -114,7 +114,7 @@ void ASpawnVolume::HandleSpawnEvents(uint8 _event)
 	{
 		//gameManager->SetCurrScenario((EScenario)_event);
 		spawnAmount = 25;
-		spawnSide = ESpawnSide::E_BOTH;
+		spawnSide = ESpawnSide::E_LEFT;
 		SpawnGameObject();
 	}
 }
@@ -145,7 +145,7 @@ void ASpawnVolume::Tick(float DeltaTime)
 	{
 		if (enemiesList.Num() > 0)
 		{
-			for (size_t i = 0; i < enemiesList.Num() - 1; i++)
+			for (size_t i = 0; i < enemiesList.Num(); i++)
 			{
 				if (!enemiesList[i]->isDead) //CHECK IS DRONE ALIVE
 				{
