@@ -44,10 +44,13 @@ void UBT_Attack::TickTask(UBehaviorTreeComponent & _ownerComp, uint8 * _nodeMemo
 
 				FVector spawnLocation = aiDrone->GetActorLocation();
 				FRotator spawnRotation = aiDrone->GetActorRotation();
+				FRotator spreadRotation = FRotator(FMath::FRandRange(-1, 1), 0, FMath::FRandRange(-1, 1));
+				FRotator finalRotation = spawnRotation + spreadRotation;
 
 				if (aiDrone->projectile)
 				{
-					world->SpawnActor<AProjectile>(aiDrone->projectile, spawnLocation, spawnRotation, spawnParams);
+					world->SpawnActor<AProjectile>(aiDrone->projectile, spawnLocation, finalRotation, spawnParams);
+					//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Vector: %f %f %f"), finalRotation.Pitch, finalRotation.Roll, finalRotation.Yaw));
 				}
 				else
 				{

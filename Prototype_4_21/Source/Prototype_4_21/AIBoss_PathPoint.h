@@ -14,4 +14,7 @@ class PROTOTYPE_4_21_API AAIBoss_PathPoint : public AAI_PathPoint
 {
 	GENERATED_BODY()
 	
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PathPoint")
+		uint8 direction;
 };

@@ -23,7 +23,15 @@ void ABossAIController::Possess(APawn *_pawn)
 			blackBoardComponenet->InitializeBlackboard(*(aiCon->behaviorTree->BlackboardAsset));
 		}
 
-		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AAIBoss_PathPoint::StaticClass(), pathPoints);
+		TArray<AActor*> tempholder;
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AAIBoss_PathPoint::StaticClass(), tempholder);
+		pathPoints.SetNum(4);
+
+		for (size_t i = 0; i < tempholder.Num(); i++)
+		{
+			AAIBoss_PathPoint* point = Cast<AAIBoss_PathPoint>(tempholder[i]);
+			pathPoints[point->direction] = point;
+		}
 
 		if (pathPoints.Num() <= 0)
 		{
