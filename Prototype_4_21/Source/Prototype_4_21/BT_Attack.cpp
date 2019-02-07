@@ -44,7 +44,7 @@ void UBT_Attack::TickTask(UBehaviorTreeComponent & _ownerComp, uint8 * _nodeMemo
 
 				FVector spawnLocation = aiDrone->GetActorLocation();
 				FRotator spawnRotation = aiDrone->GetActorRotation();
-				FRotator spreadRotation = FRotator(FMath::FRandRange(-1, 1), 0, FMath::FRandRange(-1, 1));
+				FRotator spreadRotation = FRotator(FMath::FRandRange(-1, 1), FMath::FRandRange(-1, 1), 0);
 				FRotator finalRotation = spawnRotation + spreadRotation;
 
 				if (aiDrone->projectile)
