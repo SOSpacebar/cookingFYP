@@ -28,7 +28,11 @@ enum class EScenario : uint8
 	E_INTRO,
 	E_EVENT1,
 	E_EVENT2,
-	E_NONE
+	E_EVENT3,
+	E_EVENT4,
+	E_EVENT5,
+	E_EVENT6,
+	E_NONE,
 };
 
 UCLASS()

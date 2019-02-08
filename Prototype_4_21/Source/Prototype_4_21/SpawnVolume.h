@@ -40,6 +40,7 @@ private:
 	float spawnDelay;
 
 	void SpawnGameObject();
+	void SpawnBoss();
 
 	void DestoryAll();
 

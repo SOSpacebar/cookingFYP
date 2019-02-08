@@ -45,7 +45,8 @@ void ASpawnVolume::SpawnGameObject()
 
 			FTransform spawnTransform;
 			spawnTransform = FTransform(spawnRotation, spawnLocation);
-			int32 maxSpawn = spawnObject.Num() - 1;
+			//min 2 cause don't want to spawn boss (lazy way)
+			int32 maxSpawn = spawnObject.Num() - 2;
 			//AAIDrone* const drone = world->SpawnActor<AAIDrone>(spawnObject, spawnLocation, spawnRotation, spawnParams);
 			int32 randomNum = FMath::RandRange(0, maxSpawn);
 
@@ -79,10 +80,61 @@ void ASpawnVolume::SpawnGameObject()
 			}
 
 			// TODO SET AMOUNT SPAWN.
-			if (spawnAmount > 0)
+			if (spawnAmount > 1)
 			{
-				GetWorldTimerManager().SetTimer(spawnTimer, this, &ASpawnVolume::SpawnGameObject, spawnDelay, false);
 				spawnAmount--;
+				GetWorldTimerManager().SetTimer(spawnTimer, this, &ASpawnVolume::SpawnGameObject, spawnDelay, false);
+			}
+			else
+			{
+				checkEnemyList = true;
+			}
+
+		}
+	}
+}
+
+void ASpawnVolume::SpawnBoss()
+{
+	if (spawnObject.Num() > 0)
+	{
+		UWorld* const world = GetWorld();
+
+		if (world)
+		{
+			// Setting spawn parameters
+			//FActorSpawnParameters spawnParams;
+			//spawnParams.Owner = this;
+			//spawnParams.Instigator = Instigator;
+
+			// Get random location for spawn
+			FVector spawnLocation = GetRandomPointInVolume();
+
+			FRotator spawnRotation;
+			spawnRotation.Yaw = 0;
+			spawnRotation.Pitch = 0;
+			spawnRotation.Roll = 0;
+
+
+			FTransform spawnTransform;
+			spawnTransform = FTransform(spawnRotation, spawnLocation);
+
+			//Prespawning Drone for dynamical settings
+			AAIDrone* const drone = world->SpawnActorDeferred<AAIDrone>(spawnObject[spawnObject.Num()-1], spawnTransform, this, Instigator);
+			enemiesList.Add(drone);
+
+			if (drone)
+			{
+				drone->isDead = false;
+				//Tell the engine to spawn
+				drone->FinishSpawning(spawnTransform);
+			}
+
+			// TODO SET AMOUNT SPAWN.
+			if (spawnAmount > 1)
+			{
+				spawnAmount--;
+				GetWorldTimerManager().SetTimer(spawnTimer, this, &ASpawnVolume::SpawnGameObject, spawnDelay, false);
 			}
 			else
 			{
@@ -110,12 +162,29 @@ void ASpawnVolume::HandleSpawnEvents(uint8 _event)
 {
 	//SpawnGameObject();
 	//gameManager->SetCurrScenario((EScenario)_event);
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Current Scenario, %d"), (uint8)gameManager->GetCurrScenario()));
+
 	if (gameManager->GetCurrScenario() == EScenario::E_EVENT1)
 	{
 		//gameManager->SetCurrScenario((EScenario)_event);
-		spawnAmount = 25;
+		spawnAmount = 3;
 		spawnSide = ESpawnSide::E_LEFT;
 		SpawnGameObject();
+	}
+
+	else if (gameManager->GetCurrScenario() == EScenario::E_EVENT4)
+	{
+		//gameManager->SetCurrScenario((EScenario)_event);
+		spawnAmount = 3;
+		spawnSide = ESpawnSide::E_RIGHT;
+		SpawnGameObject();
+	}
+
+	else if (gameManager->GetCurrScenario() == EScenario::E_EVENT6)
+	{
+		//gameManager->SetCurrScenario((EScenario)_event);
+		spawnAmount = 1;
+		SpawnBoss();
 	}
 }
 
@@ -154,11 +223,14 @@ void ASpawnVolume::Tick(float DeltaTime)
 				else if (i == enemiesList.Num() - 1)
 				{
 					// ALL ENEMY DEAD
-					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("ALL DEAD")));
+					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("ALL DEAD")));
 					uint8 currentScenario = (uint8)(gameManager->GetCurrScenario());
 					checkEnemyList = false;
-					gameManager->onScenarioComplete.Broadcast(++currentScenario);
+					currentScenario++;
+					gameManager->SetCurrScenario((EScenario)currentScenario);
+					gameManager->onScenarioComplete.Broadcast((uint8)gameManager->GetCurrScenario());
 					enemiesList.Empty();
+					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("After Scenario, %d"), (uint8)gameManager->GetCurrScenario()));
 				}
 			}
 		}
