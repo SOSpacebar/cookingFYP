@@ -27,7 +27,23 @@ EBTNodeResult::Type UMyBT_DroneSelectNextPoint::ExecuteTask(UBehaviorTreeCompone
 
 		if (aiCon->currentPoint != availablePathPoints.Num() - 1)
 		{
-			nextPoint = Cast<AAI_PathPoint>(availablePathPoints[++aiCon->currentPoint]);
+			uint8 randomDirection = FMath::RandRange(0, 1);
+
+			if (randomDirection == 0)
+				nextPoint = Cast<AAI_PathPoint>(availablePathPoints[++aiCon->currentPoint]);
+			else
+			{
+				if (aiCon->currentPoint == 0)
+				{
+					aiCon->currentPoint = 3;
+					nextPoint = Cast<AAI_PathPoint>(availablePathPoints[aiCon->currentPoint]);
+				}
+				else
+				{
+					nextPoint = Cast<AAI_PathPoint>(availablePathPoints[--aiCon->currentPoint]);
+				}
+			}
+
 		}
 		else
 		{
