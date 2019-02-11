@@ -55,6 +55,10 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Spawner", meta = (AllowPrivateAccess = "True"))
 		TArray<class AAIDrone*> enemiesList;
 
+	uint8 easyRate;
+	uint8 intRate;
+	uint8 hardRate;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

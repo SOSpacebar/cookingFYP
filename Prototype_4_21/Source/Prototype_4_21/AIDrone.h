@@ -54,6 +54,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AI)
 		class UParticleSystemComponent* particleDeath;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AI)
+		class USoundCue* particleDeathSound;
+
 	// Interface for II_Damageable
 	virtual void TakeDamage_Implementation(float _dmg) override;
 	virtual float GetHealth_Implementation() override;
@@ -92,4 +95,6 @@ private:
 
 	float removeTimer;
 	uint8 availableShots;
+
+	class UAudioComponent* audioComponent;
 };

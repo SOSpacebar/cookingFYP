@@ -8,9 +8,12 @@
 #include "BehaviorTree/Blackboard/BlackboardKeyType_Enum.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Components/AudioComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Animation/AnimInstance.h"
 #include "Runtime/Engine/Classes/Particles/ParticleSystemComponent.h"
 #include "Runtime/HeadMountedDisplay/Public/IXRTrackingSystem.h"
+#include "Runtime/Engine/Classes/Sound/SoundCue.h"
 
 // Sets default values
 AAIDrone::AAIDrone()
@@ -96,12 +99,22 @@ void AAIDrone::Tick(float _dt)
 		removeTimer -= _dt;
 		particleDeath->Activate(false);
 
+		// play audio
+		audioComponent = UGameplayStatics::SpawnSoundAtLocation(this, particleDeathSound, GetActorLocation(), FRotator::ZeroRotator, 0.0f, 0.0f, 0.0f, nullptr, nullptr, true);
+
 		if (removeTimer < 0)
 		{
 			SetActorHiddenInGame(true);
 			// Disables collision components
 			SetActorEnableCollision(false);
+			GetCapsuleComponent()->SetActive(false);
 			particleDeath->Deactivate();
+
+			//in case just a guard
+			if (audioComponent)
+			{
+				audioComponent->SetActive(false);
+			}
 		}
 	}
 }

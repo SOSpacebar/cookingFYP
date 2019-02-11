@@ -19,6 +19,10 @@ ASpawnVolume::ASpawnVolume()
 	spawnDelayMaxRange = 4.f;
 
 	checkEnemyList = false;
+
+	easyRate = 0;
+	intRate = 0;
+	hardRate = 0;
 }
 
 void ASpawnVolume::SpawnGameObject()
@@ -45,17 +49,27 @@ void ASpawnVolume::SpawnGameObject()
 
 			FTransform spawnTransform;
 			spawnTransform = FTransform(spawnRotation, spawnLocation);
-			//min 2 cause don't want to spawn boss (lazy way)
-			int32 maxSpawn = spawnObject.Num() - 2;
-			//AAIDrone* const drone = world->SpawnActor<AAIDrone>(spawnObject, spawnLocation, spawnRotation, spawnParams);
-			int32 randomNum = FMath::RandRange(0, maxSpawn);
 
+			int32 randomNum = FMath::RandRange(0, 10);
+			AAIDrone* drone;
 			//Prespawning Drone for dynamical settings
-			AAIDrone* const drone = world->SpawnActorDeferred<AAIDrone>(spawnObject[randomNum], spawnTransform, this, Instigator);
-			enemiesList.Add(drone);
+			if (randomNum <= easyRate)
+			{
+				drone = world->SpawnActorDeferred<AAIDrone>(spawnObject[0], spawnTransform, this, Instigator);
+			}
+			else if (randomNum > intRate && randomNum < hardRate)
+			{
+				drone = world->SpawnActorDeferred<AAIDrone>(spawnObject[1], spawnTransform, this, Instigator);
+			}
+			else
+			{
+				drone = world->SpawnActorDeferred<AAIDrone>(spawnObject[2], spawnTransform, this, Instigator);
+			}
 
 			if (drone)
 			{
+				enemiesList.Add(drone);
+
 				//Set the details
 				switch (spawnSide)
 				{
@@ -160,29 +174,30 @@ void ASpawnVolume::DestoryAll()
 
 void ASpawnVolume::HandleSpawnEvents(uint8 _event)
 {
-	//SpawnGameObject();
-	//gameManager->SetCurrScenario((EScenario)_event);
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Current Scenario, %d"), (uint8)gameManager->GetCurrScenario()));
 
 	if (gameManager->GetCurrScenario() == EScenario::E_EVENT2)
 	{
-		//gameManager->SetCurrScenario((EScenario)_event);
 		spawnAmount = 3;
 		spawnSide = ESpawnSide::E_LEFT;
+		easyRate = 5;
+		intRate = 6;
+		hardRate = 9;
 		SpawnGameObject();
 	}
 
 	else if (gameManager->GetCurrScenario() == EScenario::E_EVENT5)
 	{
-		//gameManager->SetCurrScenario((EScenario)_event);
 		spawnAmount = 3;
 		spawnSide = ESpawnSide::E_RIGHT;
+		easyRate = 9;
+		intRate = 6;
+		hardRate = 2;
 		SpawnGameObject();
 	}
 
 	else if (gameManager->GetCurrScenario() == EScenario::E_EVENT7)
 	{
-		//gameManager->SetCurrScenario((EScenario)_event);
 		spawnAmount = 1;
 		SpawnBoss();
 	}
