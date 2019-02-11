@@ -9,6 +9,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/AudioComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Animation/AnimInstance.h"
 #include "Runtime/Engine/Classes/Particles/ParticleSystemComponent.h"
 #include "Runtime/HeadMountedDisplay/Public/IXRTrackingSystem.h"
@@ -106,6 +107,7 @@ void AAIDrone::Tick(float _dt)
 			SetActorHiddenInGame(true);
 			// Disables collision components
 			SetActorEnableCollision(false);
+			GetCapsuleComponent()->SetActive(false);
 			particleDeath->Deactivate();
 
 			//in case just a guard
