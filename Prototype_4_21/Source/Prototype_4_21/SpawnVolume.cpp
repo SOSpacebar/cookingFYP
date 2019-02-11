@@ -164,7 +164,7 @@ void ASpawnVolume::HandleSpawnEvents(uint8 _event)
 	//gameManager->SetCurrScenario((EScenario)_event);
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Current Scenario, %d"), (uint8)gameManager->GetCurrScenario()));
 
-	if (gameManager->GetCurrScenario() == EScenario::E_EVENT1)
+	if (gameManager->GetCurrScenario() == EScenario::E_EVENT2)
 	{
 		//gameManager->SetCurrScenario((EScenario)_event);
 		spawnAmount = 3;
@@ -172,7 +172,7 @@ void ASpawnVolume::HandleSpawnEvents(uint8 _event)
 		SpawnGameObject();
 	}
 
-	else if (gameManager->GetCurrScenario() == EScenario::E_EVENT4)
+	else if (gameManager->GetCurrScenario() == EScenario::E_EVENT5)
 	{
 		//gameManager->SetCurrScenario((EScenario)_event);
 		spawnAmount = 3;
@@ -180,7 +180,7 @@ void ASpawnVolume::HandleSpawnEvents(uint8 _event)
 		SpawnGameObject();
 	}
 
-	else if (gameManager->GetCurrScenario() == EScenario::E_EVENT6)
+	else if (gameManager->GetCurrScenario() == EScenario::E_EVENT7)
 	{
 		//gameManager->SetCurrScenario((EScenario)_event);
 		spawnAmount = 1;

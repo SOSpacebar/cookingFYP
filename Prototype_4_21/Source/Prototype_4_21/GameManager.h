@@ -32,6 +32,7 @@ enum class EScenario : uint8
 	E_EVENT4,
 	E_EVENT5,
 	E_EVENT6,
+	E_EVENT7,
 	E_NONE,
 };
 
