@@ -25,6 +25,7 @@ AAIDrone::AAIDrone()
 	particleDeath = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Death Particle"));
 	particleDeath->SetupAttachment(GetMesh());
 	particleDeath->bAutoActivate = false;
+	particleDeath->Deactivate();
 	//particleDeath->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, NAME_None);
 
 	state = AI_DRONESTATES::IDLE;
@@ -100,7 +101,7 @@ void AAIDrone::Tick(float _dt)
 		particleDeath->Activate(false);
 
 		// play audio
-		audioComponent = UGameplayStatics::SpawnSoundAtLocation(this, particleDeathSound, GetActorLocation(), FRotator::ZeroRotator, 0.0f, 0.0f, 0.0f, nullptr, nullptr, true);
+		audioComponent = UGameplayStatics::SpawnSoundAtLocation(this, particleDeathSound, GetActorLocation(), FRotator::ZeroRotator, 1.0f, 1.0f, 0.0f, nullptr, nullptr, true);
 
 		if (removeTimer < 0)
 		{

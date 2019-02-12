@@ -17,6 +17,16 @@ enum class AI_DRONESTATES : uint8
 	NONE UMETA(DisplayName = "NONE")
 };
 
+UENUM(BlueprintType)
+enum class AI_TYPE : uint8
+{
+	EASY = 0 UMETA(DisplayName = "EASY"),
+	INTERMEDIATE = 0 UMETA(DisplayName = "INTERMEDIATE"),
+	HARD = 0 UMETA(DisplayName = "HARD"),
+	BOSS = 0 UMETA(DisplayName = "BOSS"),
+	NONE = 0 UMETA(DisplayName = "NONE"),
+};
+
 UCLASS()
 class PROTOTYPE_4_21_API AAIDrone : public ACharacter, public II_Damageable
 {
@@ -47,6 +57,9 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = AI)
 		AI_DRONESTATES state;
+
+	UPROPERTY(EditAnywhere, Category = AI)
+		AI_TYPE type;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AI)
 		TSubclassOf<class AProjectile> projectile;

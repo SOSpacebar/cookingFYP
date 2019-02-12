@@ -33,11 +33,6 @@ void ASpawnVolume::SpawnGameObject()
 
 		if (world)
 		{
-			// Setting spawn parameters
-			//FActorSpawnParameters spawnParams;
-			//spawnParams.Owner = this;
-			//spawnParams.Instigator = Instigator;
-
 			// Get random location for spawn
 			FVector spawnLocation = GetRandomPointInVolume();
 
@@ -52,18 +47,22 @@ void ASpawnVolume::SpawnGameObject()
 
 			int32 randomNum = FMath::RandRange(0, 10);
 			AAIDrone* drone;
+
 			//Prespawning Drone for dynamical settings
 			if (randomNum <= easyRate)
 			{
 				drone = world->SpawnActorDeferred<AAIDrone>(spawnObject[0], spawnTransform, this, Instigator);
+				drone->type = AI_TYPE::EASY;
 			}
-			else if (randomNum > intRate && randomNum < hardRate)
+			else if (randomNum >= intRate && randomNum < hardRate)
 			{
 				drone = world->SpawnActorDeferred<AAIDrone>(spawnObject[1], spawnTransform, this, Instigator);
+				drone->type = AI_TYPE::INTERMEDIATE;
 			}
 			else
 			{
 				drone = world->SpawnActorDeferred<AAIDrone>(spawnObject[2], spawnTransform, this, Instigator);
+				drone->type = AI_TYPE::HARD;
 			}
 
 			if (drone)
@@ -116,11 +115,6 @@ void ASpawnVolume::SpawnBoss()
 
 		if (world)
 		{
-			// Setting spawn parameters
-			//FActorSpawnParameters spawnParams;
-			//spawnParams.Owner = this;
-			//spawnParams.Instigator = Instigator;
-
 			// Get random location for spawn
 			FVector spawnLocation = GetRandomPointInVolume();
 
@@ -135,27 +129,112 @@ void ASpawnVolume::SpawnBoss()
 
 			//Prespawning Drone for dynamical settings
 			AAIDrone* const drone = world->SpawnActorDeferred<AAIDrone>(spawnObject[spawnObject.Num()-1], spawnTransform, this, Instigator);
+			drone->type = AI_TYPE::BOSS;
 			enemiesList.Add(drone);
 
 			if (drone)
 			{
+				spawnAmount = 0;
+				drone->isDead = false;
+
+				//Tell the engine to spawn
+				drone->FinishSpawning(spawnTransform);
+
+			}
+		}
+	}
+}
+
+void ASpawnVolume::HandleBossSpawnEvent()
+{
+	SpawnBoss();
+	SpawnBossMinons();
+}
+
+void ASpawnVolume::SpawnBossMinons()
+{
+	if (enemiesList.Num() > 0)
+	{
+		for (size_t i = 0; i < enemiesList.Num(); i++)
+		{
+			if (enemiesList[i]->type == AI_TYPE::BOSS && enemiesList[i]->isDead)
+			{
+				checkEnemyList = true;
+			}
+		}
+	}
+
+	if (spawnObject.Num() > 0 && checkEnemyList == false)
+	{
+		UWorld* const world = GetWorld();
+
+		if (world)
+		{
+			// Get random location for spawn
+			FVector spawnLocation = GetRandomPointInVolume();
+
+			FRotator spawnRotation;
+			spawnRotation.Yaw = 0;
+			spawnRotation.Pitch = 0;
+			spawnRotation.Roll = 0;
+
+
+			FTransform spawnTransform;
+			spawnTransform = FTransform(spawnRotation, spawnLocation);
+
+			int32 randomNum = FMath::RandRange(0, 10);
+			AAIDrone* drone;
+
+			//Prespawning Drone for dynamical settings
+			if (randomNum <= easyRate)
+			{
+				drone = world->SpawnActorDeferred<AAIDrone>(spawnObject[0], spawnTransform, this, Instigator);
+				drone->type = AI_TYPE::EASY;
+			}
+			else if (randomNum >= intRate && randomNum < hardRate)
+			{
+				drone = world->SpawnActorDeferred<AAIDrone>(spawnObject[1], spawnTransform, this, Instigator);
+				drone->type = AI_TYPE::INTERMEDIATE;
+			}
+			else
+			{
+				drone = world->SpawnActorDeferred<AAIDrone>(spawnObject[2], spawnTransform, this, Instigator);
+				drone->type = AI_TYPE::HARD;
+			}
+
+			if (drone)
+			{
+				enemiesList.Add(drone);
+
+				//Set the details
+				switch (spawnSide)
+				{
+				case ESpawnSide::E_LEFT:
+					drone->SetSpawnSide(ESpawnSide::E_LEFT);
+					break;
+				case ESpawnSide::E_RIGHT:
+					drone->SetSpawnSide(ESpawnSide::E_RIGHT);
+					break;
+				case ESpawnSide::E_BOTH:
+					drone->SetSpawnSide(ESpawnSide::E_BOTH);
+					break;
+				case ESpawnSide::E_NONE:
+					break;
+				default:
+					break;
+				}
+
 				drone->isDead = false;
 				//Tell the engine to spawn
 				drone->FinishSpawning(spawnTransform);
 			}
-
-			// TODO SET AMOUNT SPAWN.
-			if (spawnAmount > 1)
-			{
-				spawnAmount--;
-				GetWorldTimerManager().SetTimer(spawnTimer, this, &ASpawnVolume::SpawnGameObject, spawnDelay, false);
-			}
-			else
-			{
-				checkEnemyList = true;
-			}
-
 		}
+	}
+
+	// Stop the spawning process the momenet the boss is death.
+	if (!checkEnemyList)
+	{
+		GetWorldTimerManager().SetTimer(spawnTimer, this, &ASpawnVolume::SpawnBossMinons, spawnDelay, false);
 	}
 }
 
@@ -190,16 +269,20 @@ void ASpawnVolume::HandleSpawnEvents(uint8 _event)
 	{
 		spawnAmount = 3;
 		spawnSide = ESpawnSide::E_RIGHT;
-		easyRate = 9;
-		intRate = 6;
-		hardRate = 2;
+		easyRate = 2;
+		intRate = 3;
+		hardRate = 6;
 		SpawnGameObject();
 	}
 
 	else if (gameManager->GetCurrScenario() == EScenario::E_EVENT7)
 	{
 		spawnAmount = 1;
-		SpawnBoss();
+		spawnSide = ESpawnSide::E_BOTH;
+		easyRate = 3;
+		intRate = 4;
+		hardRate = 7;
+		HandleBossSpawnEvent();
 	}
 }
 

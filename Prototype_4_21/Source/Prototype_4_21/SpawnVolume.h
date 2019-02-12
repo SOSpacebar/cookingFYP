@@ -41,6 +41,8 @@ private:
 
 	void SpawnGameObject();
 	void SpawnBoss();
+	void HandleBossSpawnEvent();
+	void SpawnBossMinons();
 
 	void DestoryAll();
 
