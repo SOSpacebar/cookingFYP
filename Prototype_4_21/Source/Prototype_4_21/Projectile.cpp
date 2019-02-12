@@ -30,6 +30,8 @@ void AProjectile::OnOverlapBegin(UPrimitiveComponent* _overlappedComp, AActor * 
 			_otherComp->AddImpulseAtLocation(velocity * 100.f, GetActorLocation());
 			Destroy();
 		}
+
+		Destroy();
 	}
 }
 

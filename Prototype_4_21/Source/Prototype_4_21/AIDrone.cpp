@@ -31,7 +31,7 @@ AAIDrone::AAIDrone()
 	state = AI_DRONESTATES::IDLE;
 	playerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	health = 100.f;
-	isDead = true;
+	isDead = false;
 	removeTimer = 5.f;
 
 	fireRate = 0.f;
@@ -96,12 +96,15 @@ void AAIDrone::Tick(float _dt)
 
 	if (state == AI_DRONESTATES::DEAD)
 	{
-		isDead = true;
-		removeTimer -= _dt;
-		particleDeath->Activate(false);
+		if (!isDead)
+		{
+			isDead = true;
+			// play audio
+			audioComponent = UGameplayStatics::SpawnSoundAtLocation(this, particleDeathSound, GetActorLocation(), FRotator::ZeroRotator, 1.0f, 1.0f, 0.0f, nullptr, nullptr, true);
+			particleDeath->Activate(true);
+		}
 
-		// play audio
-		audioComponent = UGameplayStatics::SpawnSoundAtLocation(this, particleDeathSound, GetActorLocation(), FRotator::ZeroRotator, 1.0f, 1.0f, 0.0f, nullptr, nullptr, true);
+		removeTimer -= _dt;
 
 		if (removeTimer < 0)
 		{
@@ -111,11 +114,11 @@ void AAIDrone::Tick(float _dt)
 			GetCapsuleComponent()->SetActive(false);
 			particleDeath->Deactivate();
 
-			//in case just a guard
-			if (audioComponent)
-			{
-				audioComponent->SetActive(false);
-			}
+			////in case just a guard
+			//if (audioComponent)
+			//{
+			//	audioComponent->SetActive(false);
+			//}
 		}
 	}
 }
