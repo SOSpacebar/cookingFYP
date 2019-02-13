@@ -257,7 +257,7 @@ void ASpawnVolume::HandleSpawnEvents(uint8 _event)
 
 	if (gameManager->GetCurrScenario() == EScenario::E_EVENT2)
 	{
-		spawnAmount = 3;
+		spawnAmount = 25;
 		spawnSide = ESpawnSide::E_LEFT;
 		easyRate = 5;
 		intRate = 6;
@@ -267,7 +267,7 @@ void ASpawnVolume::HandleSpawnEvents(uint8 _event)
 
 	else if (gameManager->GetCurrScenario() == EScenario::E_EVENT5)
 	{
-		spawnAmount = 3;
+		spawnAmount = 30;
 		spawnSide = ESpawnSide::E_RIGHT;
 		easyRate = 2;
 		intRate = 3;
