@@ -102,6 +102,7 @@ void AAIDrone::Tick(float _dt)
 			// play audio
 			audioComponent = UGameplayStatics::SpawnSoundAtLocation(this, particleDeathSound, GetActorLocation(), FRotator::ZeroRotator, 1.0f, 1.0f, 0.0f, nullptr, nullptr, true);
 			particleDeath->Activate(true);
+			GetCapsuleComponent()->DestroyComponent();
 		}
 
 		removeTimer -= _dt;
@@ -111,7 +112,6 @@ void AAIDrone::Tick(float _dt)
 			SetActorHiddenInGame(true);
 			// Disables collision components
 			SetActorEnableCollision(false);
-			GetCapsuleComponent()->SetActive(false);
 			particleDeath->Deactivate();
 
 			////in case just a guard
