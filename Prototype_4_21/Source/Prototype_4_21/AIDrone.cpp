@@ -99,6 +99,7 @@ void AAIDrone::Tick(float _dt)
 		if (!isDead)
 		{
 			isDead = true;
+
 			// play audio
 			audioComponent = UGameplayStatics::SpawnSoundAtLocation(this, particleDeathSound, GetActorLocation(), FRotator::ZeroRotator, 1.0f, 1.0f, 0.0f, nullptr, nullptr, true);
 			particleDeath->Activate(true);
@@ -113,12 +114,6 @@ void AAIDrone::Tick(float _dt)
 			// Disables collision components
 			SetActorEnableCollision(false);
 			particleDeath->Deactivate();
-
-			////in case just a guard
-			//if (audioComponent)
-			//{
-			//	audioComponent->SetActive(false);
-			//}
 		}
 	}
 }
